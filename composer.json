@@ -1,0 +1,38 @@
+{
+  "name": "allanmcarvalho/php-boleto",
+  "description": "Biblioteca com boletos e sistema de remessa e retorno para o Yii2 Framework",
+  "keywords": [
+    "allanmcarvalho",
+    "php",
+    "cakephp"
+  ],
+  "homepage": "https://github.com/allanmcarvalho/php-boleto",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Allan Carvalho",
+      "email": "allan.m.carvalho@outlook.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1.0",
+    "ext-intl": "*",
+    "ext-mbstring": "*",
+    "itbz/fpdf": "^1.7",
+    "nesbot/carbon": "1.*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.0",
+    "orchestra/testbench": "3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "PhpBoleto\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PhpBoleto\\Tests\\": "tests"
+    }
+  }
+}
