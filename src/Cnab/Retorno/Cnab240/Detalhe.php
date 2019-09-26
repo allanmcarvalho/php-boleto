@@ -2,8 +2,8 @@
 namespace PhpBoleto\Cnab\Retorno\Cnab240;
 
 use Carbon\Carbon;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab240\Detalhe as DetalheContract;
-use PhpBoleto\Contracts\PersonInterface as PessoaContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\Detalhe as DetalheContract;
+use PhpBoleto\Interfaces\PersonInterface as PessoaContract;
 use PhpBoleto\Traits\MagicTrait;
 use PhpBoleto\Util;
 

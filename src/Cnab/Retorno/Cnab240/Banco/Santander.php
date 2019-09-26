@@ -3,18 +3,18 @@
 namespace PhpBoleto\Cnab\Retorno\Cnab240\Banco;
 
 use PhpBoleto\Cnab\Retorno\Cnab240\AbstractRetorno;
-use PhpBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use PhpBoleto\Contracts\Cnab\RetornoCnab240;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\Cnab\RetornoCnabInterface240;
 use PhpBoleto\Util;
 
-class Santander extends AbstractRetorno implements RetornoCnab240
+class Santander extends AbstractRetorno implements RetornoCnabInterface240
 {
     /**
      * Código do banco
      *
      * @var string
      */
-    protected $codigoBanco = BoletoContract::COD_BANCO_SANTANDER;
+    protected $codigoBanco = BoletoContract::BANK_CODE_SANTANDER;
 
     /**
      * Array com as ocorrencias do banco;
@@ -68,8 +68,8 @@ class Santander extends AbstractRetorno implements RetornoCnab240
         '10' => 'carteira invalida',
         '11' => 'forma de cadastramento do titulo invalida',
         '12' => 'tipo de documento invalido',
-        '13' => 'identificação da emissão do Boleto invalida',
-        '14' => 'identificação da distribuição do Boleto invalida',
+        '13' => 'identificação da emissão do SlipInterface invalida',
+        '14' => 'identificação da distribuição do SlipInterface invalida',
         '15' => 'características da cobrança incompatíveis',
         '16' => 'data de vencimento invalida',
         '17' => 'data de vencimento anterior a data de emissão',

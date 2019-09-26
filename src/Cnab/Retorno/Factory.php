@@ -1,8 +1,8 @@
 <?php
 namespace PhpBoleto\Cnab\Retorno;
 
-use PhpBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use PhpBoleto\Contracts\Cnab\Retorno;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\Cnab\Retorno;
 use PhpBoleto\Util;
 
 class Factory
@@ -46,16 +46,16 @@ class Factory
         }
 
         $aBancos = [
-            BoletoContract::COD_BANCO_BB => 'Banco\\Bb',
-            BoletoContract::COD_BANCO_SANTANDER => 'Banco\\Santander',
-            BoletoContract::COD_BANCO_CEF => 'Banco\\Caixa',
-            BoletoContract::COD_BANCO_BRADESCO => 'Banco\\Bradesco',
-            BoletoContract::COD_BANCO_ITAU => 'Banco\\Itau',
-            BoletoContract::COD_BANCO_HSBC => 'Banco\\Hsbc',
-            BoletoContract::COD_BANCO_SICREDI => 'Banco\\Sicredi',
-            BoletoContract::COD_BANCO_BANRISUL => 'Banco\\Banrisul',
-            BoletoContract::COD_BANCO_BANCOOB => 'Banco\\Bancoob',
-            BoletoContract::COD_BANCO_BNB => 'Banco\\Bnb',
+            BoletoContract::BANK_CODE_BB => 'Banco\\Bb',
+            BoletoContract::BANK_CODE_SANTANDER => 'Banco\\Santander',
+            BoletoContract::BANK_CODE_CEF => 'Banco\\Caixa',
+            BoletoContract::BANK_CODE_BRADESCO => 'Banco\\Bradesco',
+            BoletoContract::BANK_CODE_ITAU => 'Banco\\Itau',
+            BoletoContract::BANK_CODE_HSBC => 'Banco\\Hsbc',
+            BoletoContract::BANK_CODE_SICREDI => 'Banco\\Sicredi',
+            BoletoContract::BANK_CODE_BANRISUL => 'Banco\\Banrisul',
+            BoletoContract::BANK_CODE_BANCOOB => 'Banco\\Bancoob',
+            BoletoContract::BANK_CODE_BNB => 'Banco\\Bnb',
         ];
 
         if (array_key_exists($banco, $aBancos)) {

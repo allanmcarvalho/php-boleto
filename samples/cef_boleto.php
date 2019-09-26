@@ -23,7 +23,7 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Boleto\Banco\Caixa(
+$boleto = new PhpBoleto\Slip\Banco\Caixa(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '104.png',
         'dataVencimento'         => new \Carbon\Carbon(),
@@ -45,6 +45,6 @@ $boleto = new PhpBoleto\Boleto\Banco\Caixa(
     ]
 );
 
-$pdf = new PhpBoleto\Boleto\Render\Pdf();
+$pdf = new PhpBoleto\Slip\Render\Pdf();
 $pdf->addBoleto($boleto);
 $pdf->gerarBoleto($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'cef.pdf');

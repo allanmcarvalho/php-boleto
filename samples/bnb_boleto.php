@@ -23,7 +23,7 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Boleto\Banco\Bnb(
+$boleto = new PhpBoleto\Slip\Banco\Bnb(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '004.png',
         'dataVencimento'         => \Carbon\Carbon::createFromDate(2017, 04, 03),
@@ -45,7 +45,7 @@ $boleto = new PhpBoleto\Boleto\Banco\Bnb(
     ]
 );
 
-$pdf = new PhpBoleto\Boleto\Render\Pdf();
+$pdf = new PhpBoleto\Slip\Render\Pdf();
 $pdf->addBoleto($boleto);
 
 $pdf->gerarBoleto($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'bnb.pdf');

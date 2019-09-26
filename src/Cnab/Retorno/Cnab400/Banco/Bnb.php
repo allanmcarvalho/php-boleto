@@ -2,18 +2,18 @@
 namespace PhpBoleto\Cnab\Retorno\Cnab400\Banco;
 
 use PhpBoleto\Cnab\Retorno\Cnab400\AbstractRetorno;
-use PhpBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use PhpBoleto\Contracts\Cnab\RetornoCnab400;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\Cnab\RetornoCnabInterface400;
 use PhpBoleto\Util;
 
-class Bnb extends AbstractRetorno implements RetornoCnab400
+class Bnb extends AbstractRetorno implements RetornoCnabInterface400
 {
     /**
      * Código do banco
      *
      * @var string
      */
-    protected $codigoBanco = BoletoContract::COD_BANCO_BNB;
+    protected $codigoBanco = BoletoContract::BANK_CODE_BNB;
 
     /**
      * Array com as ocorrencias do banco;

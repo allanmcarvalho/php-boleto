@@ -1,19 +1,19 @@
 <?php
 namespace PhpBoleto\Cnab\Retorno;
 
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab240\Detalhe as Detalhe240Contract;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab240\Header as Header240Contract;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab240\Trailer as Trailer240Contract;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Detalhe as Detalhe400Contract;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Trailer as Trailer400Contract;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Header as Header400Contract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\Detalhe as Detalhe240Contract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\Header as Header240Contract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\Trailer as Trailer240Contract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Detalhe as Detalhe400Contract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Trailer as Trailer400Contract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Header as Header400Contract;
 use PhpBoleto\Support\Collection;
 use PhpBoleto\Util;
 
 abstract class AbstractRetorno implements \Countable, \SeekableIterator
 {
     /**
-     * Se Cnab ja foi processado
+     * Se CnabInterface ja foi processado
      *
      * @var bool
      */
@@ -80,7 +80,7 @@ abstract class AbstractRetorno implements \Countable, \SeekableIterator
             throw new \Exception("Arquivo: não existe");
         }
 
-        $r = new \ReflectionClass('\PhpBoleto\Contracts\Boleto\Boleto');
+        $r = new \ReflectionClass('\PhpBoleto\Contracts\Boleto\SlipInterface');
         $constantNames = $r->getConstants();
         $bancosDisponiveis = [];
         foreach ($constantNames as $constantName => $codigoBanco) {

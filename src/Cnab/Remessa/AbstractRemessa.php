@@ -2,14 +2,14 @@
 
 namespace PhpBoleto\Cnab\Remessa;
 
-use PhpBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use PhpBoleto\Contracts\PersonInterface as PessoaContract;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\PersonInterface as PessoaContract;
 use PhpBoleto\Support\Collection;
 use PhpBoleto\Util;
 
 /**
  * Class AbstractRemessa
- * @package PhpBoleto\Cnab\Remessa
+ * @package PhpBoleto\CnabInterface\Remessa
  */
 abstract class AbstractRemessa
 {
@@ -20,7 +20,7 @@ abstract class AbstractRemessa
     const TRAILER_LOTE = 'trailer_lote';
     const TRAILER = 'trailer';
 
-    protected $tamanho_linha = false;
+    protected $lineSize = false;
 
     /**
      * Campos que são necessários para a remessa
@@ -453,13 +453,13 @@ abstract class AbstractRemessa
      */
     protected function valida(array $a)
     {
-        if ($this->tamanho_linha === false) {
+        if ($this->lineSize === false) {
             throw new \Exception('Classe remessa deve informar o tamanho da linha');
         }
 
         $a = array_filter($a, 'strlen');
-        if (count($a) != $this->tamanho_linha) {
-            throw new \Exception(sprintf('$a não possui %s posições, possui: %s', $this->tamanho_linha, count($a)));
+        if (count($a) != $this->lineSize) {
+            throw new \Exception(sprintf('$a não possui %s posições, possui: %s', $this->lineSize, count($a)));
         }
 
         return implode('', $a);

@@ -23,7 +23,7 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Boleto\Banco\Itau(
+$boleto = new PhpBoleto\Slip\Banco\Itau(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '341.png',
         'dataVencimento'         => new \Carbon\Carbon(),
@@ -44,6 +44,6 @@ $boleto = new PhpBoleto\Boleto\Banco\Itau(
     ]
 );
 
-$pdf = new PhpBoleto\Boleto\Render\Pdf();
+$pdf = new PhpBoleto\Slip\Render\Pdf();
 $pdf->addBoleto($boleto);
 $pdf->gerarBoleto($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'itau.pdf');

@@ -23,7 +23,7 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Boleto\Banco\Hsbc(
+$boleto = new PhpBoleto\Slip\Banco\Hsbc(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '399.png',
         'dataVencimento'         => new \Carbon\Carbon(),
@@ -46,6 +46,6 @@ $boleto = new PhpBoleto\Boleto\Banco\Hsbc(
     ]
 );
 
-$pdf = new PhpBoleto\Boleto\Render\Pdf();
+$pdf = new PhpBoleto\Slip\Render\Pdf();
 $pdf->addBoleto($boleto);
 $pdf->gerarBoleto($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'hsbc.pdf');

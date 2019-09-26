@@ -2,7 +2,7 @@
 
 namespace PhpBoleto\Tests\Remessa;
 
-use PhpBoleto\Boleto\Banco as Boleto;
+use PhpBoleto\Slip\Banco as Boleto;
 use PhpBoleto\Cnab\Remessa\Cnab240\Banco as Remessa;
 use PhpBoleto\Person;
 use PhpBoleto\Tests\TestCase;

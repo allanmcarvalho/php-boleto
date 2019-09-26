@@ -6,11 +6,11 @@ use PhpBoleto\Cnab\Remessa\AbstractRemessa as AbstractRemessaGeneric;
 
 /**
  * Class AbstractRemessa
- * @package PhpBoleto\Cnab\Remessa\Cnab400
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400
  */
 abstract class AbstractRemessa extends AbstractRemessaGeneric
 {
-    protected $tamanho_linha = 400;
+    protected $lineSize = 400;
 
     /**
      * Inicia a edição do header

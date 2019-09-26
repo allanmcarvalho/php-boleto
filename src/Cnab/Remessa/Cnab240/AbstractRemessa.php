@@ -5,14 +5,14 @@ use PhpBoleto\Cnab\Remessa\AbstractRemessa as AbstractRemessaGeneric;
 
 /**
  * Class AbstractRemessa
- * @package PhpBoleto\Cnab\Remessa\Cnab240
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab240
  */
 abstract class AbstractRemessa extends AbstractRemessaGeneric
 {
     /**
      * @var int
      */
-    protected $tamanho_linha = 240;
+    protected $lineSize = 240;
 
     /**
      * Array contendo o cnab.

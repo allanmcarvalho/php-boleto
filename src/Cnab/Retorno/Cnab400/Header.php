@@ -2,7 +2,7 @@
 namespace PhpBoleto\Cnab\Retorno\Cnab400;
 
 use Carbon\Carbon;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Header as HeaderContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Header as HeaderContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class Header implements HeaderContract

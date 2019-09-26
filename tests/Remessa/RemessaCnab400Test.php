@@ -2,7 +2,7 @@
 
 namespace PhpBoleto\Tests\Remessa;
 
-use PhpBoleto\Boleto\Banco as Boleto;
+use PhpBoleto\Slip\Banco as Boleto;
 use PhpBoleto\Cnab\Remessa\Cnab400\Banco as Remessa;
 use PhpBoleto\Person;
 use PhpBoleto\Tests\TestCase;
@@ -102,7 +102,7 @@ class RemessaCnab400Test extends TestCase
         );
 
         $boleto2 = $boleto;
-        $boleto2->setNumeroDocumento(2);
+        $boleto2->setDocumentNumber(2);
 
         $remessa = new Remessa\Banrisul(
             [

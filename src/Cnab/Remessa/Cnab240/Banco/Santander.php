@@ -3,13 +3,13 @@ namespace PhpBoleto\Cnab\Remessa\Cnab240\Banco;
 
 use PhpBoleto\CalculoDV;
 use PhpBoleto\Cnab\Remessa\Cnab240\AbstractRemessa;
-use PhpBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use PhpBoleto\Contracts\Cnab\Remessa as RemessaContract;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\Cnab\Remessa as RemessaContract;
 use PhpBoleto\Util;
 
 /**
  * Class Santander
- * @package PhpBoleto\Cnab\Remessa\Cnab240\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab240\Banco
  */
 class Santander extends AbstractRemessa implements RemessaContract
 {
@@ -39,7 +39,7 @@ class Santander extends AbstractRemessa implements RemessaContract
      *
      * @var string
      */
-    protected $codigoBanco = BoletoContract::COD_BANCO_SANTANDER;
+    protected $codigoBanco = BoletoContract::BANK_CODE_SANTANDER;
 
     /**
      * Tipo de inscrição da empresa
@@ -146,7 +146,7 @@ class Santander extends AbstractRemessa implements RemessaContract
         $this->add(42, 42, $this->getContaDv() ?: CalculoDV::santanderContaCorrente($this->getAgencia(), $this->getConta())); // Digito  da Conta Cobrança
         $this->add(43, 44, ''); // Reservado (Uso Banco)
 
-        $this->add(45, 57, Util::formatCnab(9, $boleto->getNossoNumero(), 13)); // Nosso Número
+        $this->add(45, 57, Util::formatCnab(9, $boleto->getOurNumber(), 13)); // Nosso Número
 
         $this->add(58, 58, Util::formatCnab(9, $this->getCarteira(), 1)); // Tipo de Cobrança
 
@@ -155,9 +155,9 @@ class Santander extends AbstractRemessa implements RemessaContract
         $this->add(61, 61, ''); // Reservado (Uso Banco)
         $this->add(62, 62, ''); // Reservado (Uso Banco)
         //
-        $this->add(63, 77, Util::formatCnab(9, $boleto->getNumeroControle(), 15)); // Seu Número
-        $this->add(78, 85, $boleto->getDataVencimento()->format('dmY')); // Data de vencimento do título
-        $this->add(86, 100, Util::formatCnab(9, $boleto->getValor(), 15, 2)); // Valor nominal do título
+        $this->add(63, 77, Util::formatCnab(9, $boleto->getControlNumber(), 15)); // Seu Número
+        $this->add(78, 85, $boleto->getDueDate()->format('dmY')); // Data de vencimento do título
+        $this->add(86, 100, Util::formatCnab(9, $boleto->getValue(), 15, 2)); // Valor nominal do título
         $this->add(101, 104, Util::formatCnab(9, 0, 4)); //Agência encarregada da cobrança
         $this->add(105, 105, Util::formatCnab(9, 0, 1)); //Dígito da Agência do Cedente
         $this->add(106, 106, ''); //Reservado (uso Banco)
@@ -166,15 +166,15 @@ class Santander extends AbstractRemessa implements RemessaContract
         $this->add(110, 117, date('dmY')); //Data da emissão do título
 
         $juros = 0;
-        if ($boleto->getJuros() > 0) {
-            $juros = Util::percent($boleto->getValor(), $boleto->getJuros()) / 30;
+        if ($boleto->getInterest() > 0) {
+            $juros = Util::percent($boleto->getValue(), $boleto->getInterest()) / 30;
         }
         $this->add(118, 118, 1); //Código do juros de mora - 1 = Valor fixo ate a data informada – Informar o valor no campo “valor de desconto a ser concedido”.
-        $this->add(119, 126, Util::formatCnab(9, $boleto->getDataVencimento()->format('dmY'), 8)); //Data do juros de mora / data de vencimento do titulo
+        $this->add(119, 126, Util::formatCnab(9, $boleto->getDueDate()->format('dmY'), 8)); //Data do juros de mora / data de vencimento do titulo
         $this->add(127, 141, Util::formatCnab(9, $juros, 15, 2)); //Valor da mora/dia ou Taxa mensal
         $this->add(142, 142, Util::formatCnab(9, '', 1)); //Código do desconto 1
-        $this->add(143, 150, Util::formatCnab(9, $boleto->getDataDesconto()->format('dmY'), 8)); //Data de desconto 1
-        $this->add(151, 165, Util::formatCnab(9, $boleto->getDesconto(), 15, 2)); //Valor ou Percentual do desconto concedido //TODO
+        $this->add(143, 150, Util::formatCnab(9, $boleto->getDiscountDate()->format('dmY'), 8)); //Data de desconto 1
+        $this->add(151, 165, Util::formatCnab(9, $boleto->getDiscount(), 15, 2)); //Valor ou Percentual do desconto concedido //TODO
         $this->add(166, 180, Util::formatCnab(9, 0, 15, 2)); //Valor do IOF a ser recolhido
         $this->add(181, 195, Util::formatCnab(9, 0, 15, 2)); //Valor do abatimento
         $this->add(196, 220, ''); //Identificação do título na empresa
@@ -208,16 +208,16 @@ class Santander extends AbstractRemessa implements RemessaContract
         $this->add(15, 15, ''); // Reservado (Uso Banco)
         $this->add(16, 17, Util::formatCnab(9, 01, 2)); // Código de movimento remessa
         $this->add(18, 18, Util::formatCnab(9, 1, 1)); // Tipo de inscrição do sacado
-        $this->add(19, 33, Util::formatCnab(9, Util::onlyNumbers($boleto->getPagador()->getDocument()), 15)); // Número de inscrição do sacado
-        $this->add(34, 73, Util::formatCnab('X', $boleto->getPagador()->getName(), 40)); // Nome do pagador/Sacado
-        $this->add(74, 113, Util::formatCnab('X', $boleto->getPagador()->getAddress(), 40)); // Endereço do pagador/Sacado
-        $this->add(114, 128, Util::formatCnab('X', $boleto->getPagador()->getAddressDistrict(), 15)); // Bairro do pagador/Sacado
-        $this->add(129, 133, Util::formatCnab(9, Util::onlyNumbers($boleto->getPagador()->getPostalCode()), 5)); // CEP do pagador/Sacado
-        $this->add(134, 136, Util::formatCnab(9, Util::onlyNumbers(substr($boleto->getPagador()->getPostalCode(), 6, 9)), 3)); //SUFIXO do cep do pagador/Sacado
-        $this->add(137, 151, Util::formatCnab('X', $boleto->getPagador()->getCity(), 15)); // cidade do sacado
-        $this->add(152, 153, Util::formatCnab('X', $boleto->getPagador()->getStateUf(), 2)); // Uf do sacado
+        $this->add(19, 33, Util::formatCnab(9, Util::onlyNumbers($boleto->getPayer()->getDocument()), 15)); // Número de inscrição do sacado
+        $this->add(34, 73, Util::formatCnab('X', $boleto->getPayer()->getName(), 40)); // Nome do pagador/Sacado
+        $this->add(74, 113, Util::formatCnab('X', $boleto->getPayer()->getAddress(), 40)); // Endereço do pagador/Sacado
+        $this->add(114, 128, Util::formatCnab('X', $boleto->getPayer()->getAddressDistrict(), 15)); // Bairro do pagador/Sacado
+        $this->add(129, 133, Util::formatCnab(9, Util::onlyNumbers($boleto->getPayer()->getPostalCode()), 5)); // CEP do pagador/Sacado
+        $this->add(134, 136, Util::formatCnab(9, Util::onlyNumbers(substr($boleto->getPayer()->getPostalCode(), 6, 9)), 3)); //SUFIXO do cep do pagador/Sacado
+        $this->add(137, 151, Util::formatCnab('X', $boleto->getPayer()->getCity(), 15)); // cidade do sacado
+        $this->add(152, 153, Util::formatCnab('X', $boleto->getPayer()->getStateUf(), 2)); // Uf do sacado
         $this->add(154, 154, Util::formatCnab(9, 1, 1)); // Tipo de inscrição do sacado
-        $this->add(155, 169, Util::formatCnab(9, Util::onlyNumbers($boleto->getPagador()->getDocument()), 15)); // Tipo de inscrição do sacado
+        $this->add(155, 169, Util::formatCnab(9, Util::onlyNumbers($boleto->getPayer()->getDocument()), 15)); // Tipo de inscrição do sacado
         $this->add(170, 209, Util::formatCnab('X', '', 40)); // Nome do Sacador
         $this->add(210, 212, Util::formatCnab(9, 0, 3)); // Identificador de carne 000 - Não possui, 001 - Possui Carné
         $this->add(213, 215, Util::formatCnab(9, 0, 3)); // Sequencial da parcela

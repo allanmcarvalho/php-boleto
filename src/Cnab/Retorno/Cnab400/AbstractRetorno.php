@@ -3,18 +3,18 @@ namespace PhpBoleto\Cnab\Retorno\Cnab400;
 
 use PhpBoleto\Util;
 use \PhpBoleto\Cnab\Retorno\AbstractRetorno as AbstractRetornoGeneric;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Header as HeaderContract;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Detalhe as DetalheContract;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Trailer as TrailerContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Header as HeaderContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Detalhe as DetalheContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Trailer as TrailerContract;
 
 /**
  * Class AbstractRetorno
  *
- * @method  \PhpBoleto\Cnab\Retorno\Cnab400\Detalhe getDetalhe()
- * @method  \PhpBoleto\Cnab\Retorno\Cnab400\Header getHeader()
- * @method  \PhpBoleto\Cnab\Retorno\Cnab400\Trailer getTrailer()
- * @method  \PhpBoleto\Cnab\Retorno\Cnab400\Detalhe detalheAtual()
- * @package PhpBoleto\Cnab\Retorno\Cnab400
+ * @method  \PhpBoleto\CnabInterface\Retorno\Cnab400\Detalhe getDetalhe()
+ * @method  \PhpBoleto\CnabInterface\Retorno\Cnab400\Header getHeader()
+ * @method  \PhpBoleto\CnabInterface\Retorno\Cnab400\Trailer getTrailer()
+ * @method  \PhpBoleto\CnabInterface\Retorno\Cnab400\Detalhe detalheAtual()
+ * @package PhpBoleto\CnabInterface\Retorno\Cnab400
  */
 abstract class AbstractRetorno extends AbstractRetornoGeneric
 {

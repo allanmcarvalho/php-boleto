@@ -3,7 +3,7 @@
 namespace PhpBoleto\Cnab\Retorno\Cnab240;
 
 use Carbon\Carbon;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab240\HeaderLote as HeaderLoteContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\HeaderLote as HeaderLoteContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class HeaderLote implements HeaderLoteContract

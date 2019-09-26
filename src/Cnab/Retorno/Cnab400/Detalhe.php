@@ -3,7 +3,7 @@ namespace PhpBoleto\Cnab\Retorno\Cnab400;
 
 use Carbon\Carbon;
 use PhpBoleto\Traits\MagicTrait;
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Detalhe as DetalheContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Detalhe as DetalheContract;
 
 class Detalhe implements DetalheContract
 {

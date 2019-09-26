@@ -2,13 +2,13 @@
 namespace PhpBoleto\Cnab\Remessa\Cnab400\Banco;
 
 use PhpBoleto\Cnab\Remessa\Cnab400\AbstractRemessa;
-use PhpBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use PhpBoleto\Contracts\Cnab\Remessa as RemessaContract;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\Cnab\Remessa as RemessaContract;
 use PhpBoleto\Util;
 
 /**
  * Class Santander
- * @package PhpBoleto\Cnab\Remessa\Cnab400\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
  */
 class Santander extends AbstractRemessa implements RemessaContract
 {
@@ -53,7 +53,7 @@ class Santander extends AbstractRemessa implements RemessaContract
      *
      * @var string
      */
-    protected $codigoBanco = BoletoContract::COD_BANCO_SANTANDER;
+    protected $codigoBanco = BoletoContract::BANK_CODE_SANTANDER;
 
     /**
      * Define as carteiras disponíveis para cada banco
@@ -153,70 +153,70 @@ class Santander extends AbstractRemessa implements RemessaContract
     {
         $this->iniciaDetalhe();
 
-        $this->total += $boleto->getValor();
+        $this->total += $boleto->getValue();
 
         $this->add(1, 1, '1');
         $this->add(2, 3, strlen(Util::onlyNumbers($this->getBeneficiario()->getDocument())) == 14 ? '02' : '01');
         $this->add(4, 17, Util::formatCnab('9L', $this->getBeneficiario()->getDocument(), 14));
         $this->add(18, 37, Util::formatCnab('9', $this->getCodigoTransmissao(), 20));
-        $this->add(38, 62, Util::formatCnab('X', $boleto->getNumeroControle(), 25)); // numero de controle
-        $this->add(63, 70, Util::numberFormatGeral($boleto->getNossoNumero(), 8));
+        $this->add(38, 62, Util::formatCnab('X', $boleto->getControlNumber(), 25)); // numero de controle
+        $this->add(63, 70, Util::numberFormatGeral($boleto->getOurNumber(), 8));
         $this->add(71, 76, '000000');
         $this->add(77, 77, '');
-        $this->add(78, 78, ($boleto->getMulta() > 0 ? '4' : '0'));
-        $this->add(79, 82, Util::formatCnab('9', $boleto->getMulta(), 4, 2));
+        $this->add(78, 78, ($boleto->getFine() > 0 ? '4' : '0'));
+        $this->add(79, 82, Util::formatCnab('9', $boleto->getFine(), 4, 2));
         $this->add(83, 84, '00');
         $this->add(85, 97, Util::formatCnab('9', 0, 13, 2));
         $this->add(98, 101, '');
-        $this->add(102, 107, $boleto->getJurosApos() === 0 ? '000000' : $boleto->getDataVencimento()->copy()->addDays($boleto->getJurosApos())->format('dmy'));
+        $this->add(102, 107, $boleto->getChargeInterestAfter() === 0 ? '000000' : $boleto->getDueDate()->copy()->addDays($boleto->getChargeInterestAfter())->format('dmy'));
         $this->add(108, 108, $this->getCarteiraNumero() > 200 ? '1' : '5');
         $this->add(109, 110, self::OCORRENCIA_REMESSA); // REGISTRO
-        if ($boleto->getStatus() == $boleto::STATUS_BAIXA) {
+        if ($boleto->getStatus() == $boleto::STATUS_DROP) {
             $this->add(109, 110, self::OCORRENCIA_PEDIDO_BAIXA); // BAIXA
         }
-        if ($boleto->getStatus() == $boleto::STATUS_ALTERACAO) {
+        if ($boleto->getStatus() == $boleto::STATUS_ALTER) {
             $this->add(109, 110, self::OCORRENCIA_ALT_VENCIMENTO); // ALTERAR VENCIMENTO
         }
-        $this->add(111, 120, Util::formatCnab('X', $boleto->getNumeroDocumento(), 10));
-        $this->add(121, 126, $boleto->getDataVencimento()->format('dmy'));
-        $this->add(127, 139, Util::formatCnab('9', $boleto->getValor(), 13, 2));
+        $this->add(111, 120, Util::formatCnab('X', $boleto->getDocumentNumber(), 10));
+        $this->add(121, 126, $boleto->getDueDate()->format('dmy'));
+        $this->add(127, 139, Util::formatCnab('9', $boleto->getValue(), 13, 2));
         $this->add(140, 142, $this->getCodigoBanco());
         $this->add(143, 147, '00000');
-        $this->add(148, 149, $boleto->getEspecieDocCodigo());
-        $this->add(150, 150, $boleto->getAceite());
-        $this->add(151, 156, $boleto->getDataDocumento()->format('dmy'));
+        $this->add(148, 149, $boleto->getDocumentTypeCode());
+        $this->add(150, 150, $boleto->getAcceptance());
+        $this->add(151, 156, $boleto->getDocumentDate()->format('dmy'));
         $this->add(157, 158, self::INSTRUCAO_SEM);
         $this->add(159, 160, self::INSTRUCAO_SEM);
-        if ($boleto->getDiasProtesto() > 0) {
+        if ($boleto->getProtestAfter() > 0) {
             $this->add(157, 158, self::INSTRUCAO_PROTESTAR);
-        } elseif ($boleto->getDiasBaixaAutomatica() == 15) {
+        } elseif ($boleto->getAutomaticDropAfter() == 15) {
             $this->add(157, 158, self::INSTRUCAO_BAIXAR_APOS_VENC_15);
-        } elseif ($boleto->getDiasBaixaAutomatica() == 30) {
+        } elseif ($boleto->getAutomaticDropAfter() == 30) {
             $this->add(157, 158, self::INSTRUCAO_BAIXAR_APOS_VENC_30);
         }
         $juros = 0;
-        if ($boleto->getJuros() > 0) {
-            $juros = Util::percent($boleto->getValor(), $boleto->getJuros())/30;
+        if ($boleto->getInterest() > 0) {
+            $juros = Util::percent($boleto->getValue(), $boleto->getInterest())/30;
         }
         $this->add(161, 173, Util::formatCnab('9', $juros, 13, 2));
-        $this->add(174, 179, $boleto->getDesconto() > 0 ? $boleto->getDataDesconto()->format('dmy') : '000000');
-        $this->add(180, 192, Util::formatCnab('9', $boleto->getDesconto(), 13, 2));
+        $this->add(174, 179, $boleto->getDiscount() > 0 ? $boleto->getDiscountDate()->format('dmy') : '000000');
+        $this->add(180, 192, Util::formatCnab('9', $boleto->getDiscount(), 13, 2));
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
-        $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPagador()->getDocument())) == 14 ? '02' : '01');
-        $this->add(221, 234, Util::formatCnab('9L', $boleto->getPagador()->getDocument(), 14));
-        $this->add(235, 274, Util::formatCnab('X', $boleto->getPagador()->getName(), 40));
-        $this->add(275, 314, Util::formatCnab('X', $boleto->getPagador()->getAddress(), 40));
-        $this->add(315, 326, Util::formatCnab('X', $boleto->getPagador()->getAddressDistrict(), 12));
-        $this->add(327, 334, Util::formatCnab('9L', $boleto->getPagador()->getPostalCode(), 8));
-        $this->add(335, 349, Util::formatCnab('X', $boleto->getPagador()->getCity(), 15));
-        $this->add(350, 351, Util::formatCnab('X', $boleto->getPagador()->getStateUf(), 2));
-        $this->add(352, 381, Util::formatCnab('X', $boleto->getSacadorAvalista() ? $boleto->getSacadorAvalista()->getName() : '', 30));
+        $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPayer()->getDocument())) == 14 ? '02' : '01');
+        $this->add(221, 234, Util::formatCnab('9L', $boleto->getPayer()->getDocument(), 14));
+        $this->add(235, 274, Util::formatCnab('X', $boleto->getPayer()->getName(), 40));
+        $this->add(275, 314, Util::formatCnab('X', $boleto->getPayer()->getAddress(), 40));
+        $this->add(315, 326, Util::formatCnab('X', $boleto->getPayer()->getAddressDistrict(), 12));
+        $this->add(327, 334, Util::formatCnab('9L', $boleto->getPayer()->getPostalCode(), 8));
+        $this->add(335, 349, Util::formatCnab('X', $boleto->getPayer()->getCity(), 15));
+        $this->add(350, 351, Util::formatCnab('X', $boleto->getPayer()->getStateUf(), 2));
+        $this->add(352, 381, Util::formatCnab('X', $boleto->getGuarantor() ? $boleto->getGuarantor()->getName() : '', 30));
         $this->add(382, 382, '');
         $this->add(383, 383, 'I');
         $this->add(384, 385, substr($this->getConta(), -2));
         $this->add(386, 391, '');
-        $this->add(392, 393, Util::formatCnab('9', $boleto->getDiasProtesto('0'), 2));
+        $this->add(392, 393, Util::formatCnab('9', $boleto->getProtestAfter('0'), 2));
         $this->add(394, 394, '');
         $this->add(395, 400, Util::formatCnab('9', $this->iRegistros + 1, 6));
 

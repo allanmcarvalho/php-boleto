@@ -1,7 +1,7 @@
 <?php
 namespace PhpBoleto\Cnab\Retorno\Cnab400;
 
-use PhpBoleto\Contracts\Cnab\Retorno\Cnab400\Trailer as TrailerContract;
+use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Trailer as TrailerContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class Trailer implements TrailerContract

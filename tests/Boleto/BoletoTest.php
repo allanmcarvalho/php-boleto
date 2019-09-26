@@ -2,8 +2,8 @@
 
 namespace PhpBoleto\Tests\Boleto;
 
-use PhpBoleto\Boleto\Banco as Boleto;
-use PhpBoleto\Boleto\Render\Pdf;
+use PhpBoleto\Slip\Banco as Boleto;
+use PhpBoleto\Slip\Render\Pdf;
 use PhpBoleto\Person;
 use PhpBoleto\Tests\TestCase;
 

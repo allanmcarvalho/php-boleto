@@ -23,7 +23,7 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Boleto\Banco\Santander(
+$boleto = new PhpBoleto\Slip\Banco\Santander(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '033.png',
         'dataVencimento'         => new \Carbon\Carbon(),
@@ -44,7 +44,7 @@ $boleto = new PhpBoleto\Boleto\Banco\Santander(
     ]
 );
 
-$pdf = new PhpBoleto\Boleto\Render\Pdf();
+$pdf = new PhpBoleto\Slip\Render\Pdf();
 $pdf->addBoleto($boleto);
 $pdf->gerarBoleto($pdf::OUTPUT_SAVE,
     __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'santander.pdf');

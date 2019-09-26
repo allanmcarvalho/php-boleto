@@ -2,18 +2,18 @@
 namespace PhpBoleto\Cnab\Retorno\Cnab400\Banco;
 
 use PhpBoleto\Cnab\Retorno\Cnab400\AbstractRetorno;
-use PhpBoleto\Contracts\Boleto\Boleto as BoletoContract;
-use PhpBoleto\Contracts\Cnab\RetornoCnab400;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\Cnab\RetornoCnabInterface400;
 use PhpBoleto\Util;
 
-class Sicredi extends AbstractRetorno implements RetornoCnab400
+class Sicredi extends AbstractRetorno implements RetornoCnabInterface400
 {
     /**
      * Código do banco
      *
      * @var string
      */
-    protected $codigoBanco = BoletoContract::COD_BANCO_SICREDI;
+    protected $codigoBanco = BoletoContract::BANK_CODE_SICREDI;
 
     /**
      * Array com as ocorrencias do banco;
@@ -250,7 +250,7 @@ class Sicredi extends AbstractRetorno implements RetornoCnab400
             ->setValorMora(Util::nFloat($this->rem(267, 279, $detalhe)/100, 2, false))
             ->setValorMulta(Util::nFloat($this->rem(280, 292, $detalhe)/100, 2, false))
             ->setDataCredito($this->rem(329, 336, $detalhe), 'Ymd');
-        
+
         $this->totais['valor_recebido'] += (double)$d->getValorRecebido();
 
         if ($d->hasOcorrencia('06', '15', '16')) {
