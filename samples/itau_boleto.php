@@ -1,6 +1,10 @@
 <?php
+
+use Carbon\Carbon;
+use PhpBoleto\Person;
+
 require 'autoload.php';
-$beneficiario = new \PhpBoleto\Person(
+$beneficiario = new Person(
     [
         'nome'      => 'ACME',
         'endereco'  => 'Rua um, 123',
@@ -11,7 +15,7 @@ $beneficiario = new \PhpBoleto\Person(
     ]
 );
 
-$pagador = new \PhpBoleto\Person(
+$pagador = new Person(
     [
         'nome'      => 'Cliente',
         'endereco'  => 'Rua um, 123',
@@ -26,7 +30,7 @@ $pagador = new \PhpBoleto\Person(
 $boleto = new PhpBoleto\Slip\Banco\Itau(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '341.png',
-        'dataVencimento'         => new \Carbon\Carbon(),
+        'dataVencimento' => new Carbon(),
         'valor'                  => 100,
         'multa'                  => false,
         'juros'                  => false,
@@ -46,4 +50,4 @@ $boleto = new PhpBoleto\Slip\Banco\Itau(
 
 $pdf = new PhpBoleto\Slip\Render\Pdf();
 $pdf->addBoleto($boleto);
-$pdf->gerarBoleto($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'itau.pdf');
+$pdf->generateSlip($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'itau.pdf');

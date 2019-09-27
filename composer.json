@@ -1,6 +1,6 @@
 {
   "name": "allanmcarvalho/php-boleto",
-  "description": "Biblioteca com boletos e sistema de remessa e retorno para o Yii2 Framework",
+    "description": "Ferramenta para gerar boletos, emitir remessas e ler retornos",
   "keywords": [
     "allanmcarvalho",
     "php",
@@ -18,8 +18,7 @@
     "php": ">=7.1.0",
     "ext-intl": "*",
     "ext-mbstring": "*",
-    "itbz/fpdf": "^1.7",
-    "nesbot/carbon": "1.*"
+      "setasign/fpdf": "1.8.*"
   },
   "require-dev": {
     "phpunit/phpunit": "~5.0",

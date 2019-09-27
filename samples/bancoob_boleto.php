@@ -1,6 +1,10 @@
 <?php
+
+use Carbon\Carbon;
+use PhpBoleto\Person;
+
 require 'autoload.php';
-$beneficiario = new \PhpBoleto\Person(
+$beneficiario = new Person(
     [
         'nome'      => 'ACME',
         'endereco'  => 'Rua um, 123',
@@ -11,7 +15,7 @@ $beneficiario = new \PhpBoleto\Person(
     ]
 );
 
-$pagador = new \PhpBoleto\Person(
+$pagador = new Person(
     [
         'nome'      => 'Cliente',
         'endereco'  => 'Rua um, 123',
@@ -26,7 +30,7 @@ $pagador = new \PhpBoleto\Person(
 $boleto = new PhpBoleto\Slip\Banco\Bancoob(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '756.png',
-        'dataVencimento'         => new \Carbon\Carbon(),
+        'dataVencimento' => new Carbon(),
         'valor'                  => 100,
         'multa'                  => false,
         'juros'                  => false,
@@ -48,7 +52,7 @@ $boleto = new PhpBoleto\Slip\Banco\Bancoob(
 $pdf = new PhpBoleto\Slip\Render\Pdf();
 $pdf->addBoleto($boleto);
 $pdf->hideInstrucoes();
-$pdf->showComprovante();
-$pdf->gerarBoleto($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'bancoob.pdf');
+$pdf->showReceipt();
+$pdf->generateSlip($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'bancoob.pdf');
 header('Content-type: application/pdf');
 @readfile(__DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'bancoob.pdf');

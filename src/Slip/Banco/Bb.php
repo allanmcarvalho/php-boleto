@@ -3,16 +3,16 @@
 namespace PhpBoleto\Slip\Banco;
 
 use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Bb
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Bb extends SlipAbstract implements BoletoContract
+class Bb extends SlipAbstract implements SlipInterface
 {
     /**
      * Bb constructor.
@@ -22,7 +22,7 @@ class Bb extends SlipAbstract implements BoletoContract
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->setRequiredFields('number', 'convenio', 'carteira');
+        $this->setRequiredFields('number', 'covenant', 'wallet');
     }
 
     /**
@@ -40,7 +40,7 @@ class Bb extends SlipAbstract implements BoletoContract
     protected $wallets = array('11', '12', '15', '16', '17', '18', '31', '51');
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      *
      * @var string
      */
@@ -56,92 +56,64 @@ class Bb extends SlipAbstract implements BoletoContract
         'ND' => '13',
     ];
 
+
     /**
-     * Define o número do convênio (4, 6 ou 7 caracteres)
+     * Define o numero da variação da carteira.
      *
      * @var string
      */
-    protected $convenio;
-
-    /**
-     * Defgine o numero da variação da carteira.
-     *
-     * @var string
-     */
-    protected $variacao_carteira;
-
-    /**
-     * Define o número do convênio. Sempre use string pois a quantidade de caracteres é validada.
-     *
-     * @param  string $convenio
-     * @return Bb
-     */
-    public function setConvenio($convenio)
-    {
-        $this->convenio = $convenio;
-        return $this;
-    }
-
-    /**
-     * Retorna o número do convênio
-     *
-     * @return string
-     */
-    public function getConvenio()
-    {
-        return $this->convenio;
-    }
+    protected $walletVariation;
 
     /**
      * Define o número da variação da carteira, para saber quando utilizar o nosso numero de 17 posições.
      *
-     * @param  string $variacao_carteira
+     * @param string $walletVariation
      * @return Bb
      */
-    public function setVariacaoCarteira($variacao_carteira)
+    public function setWalletVariation($walletVariation): Bb
     {
-        $this->variacao_carteira = $variacao_carteira;
+        $this->walletVariation = $walletVariation;
         return $this;
     }
 
     /**
-     * Retorna o número da variacao de carteira
+     * Retorna o número da variação de carteira
      *
      * @return string
      */
-    public function getVariacaoCarteira()
+    public function getWalletVariation()
     {
-        return $this->variacao_carteira;
+        return $this->walletVariation;
     }
 
     /**
      * Gera o Nosso Número.
      *
-     * @throws Exception
      * @return string
+     * @throws Exception
      */
     protected function generateOurNumber()
     {
-        $convenio = $this->getConvenio();
-        $numero_boleto = $this->getNumber();
-        switch (strlen($convenio)) {
+        $covenant = $this->getCovenant();
+        $slipNumber = $this->getNumber();
+        switch (strlen($covenant)) {
             case 4:
-                $numero = Util::numberFormatGeral($convenio, 4) . Util::numberFormatGeral($numero_boleto, 7);
+                $number = Util::numberFormatGeral($covenant, 4) . Util::numberFormatGeral($slipNumber, 7);
                 break;
             case 6:
-                if (in_array($this->getWallet(), ['16', '18']) && $this->getVariacaoCarteira() == 17) {
-                    $numero = Util::numberFormatGeral($numero_boleto, 17);
+                if (in_array($this->getWallet(), ['16', '18']) && $this->getWalletVariation() == 17) {
+                    $number = Util::numberFormatGeral($slipNumber, 17);
                 } else {
-                    $numero = Util::numberFormatGeral($convenio, 6) . Util::numberFormatGeral($numero_boleto, 5);
+                    $number = Util::numberFormatGeral($covenant, 6) . Util::numberFormatGeral($slipNumber, 5);
                 }
                 break;
             case 7:
-                $numero = Util::numberFormatGeral($convenio, 7) . Util::numberFormatGeral($numero_boleto, 10);
+                $number = Util::numberFormatGeral($covenant, 7) . Util::numberFormatGeral($slipNumber, 10);
                 break;
             default:
                 throw new Exception('O código do convênio precisa ter 4, 6 ou 7 dígitos!');
         }
-        return $numero;
+        return $number;
     }
 
     /**
@@ -151,7 +123,7 @@ class Bb extends SlipAbstract implements BoletoContract
      */
     public function getOurNumberCustom()
     {
-        $nn = $this->getOurNumber() . CalculoDV::bbNossoNumero($this->getOurNumber());
+        $nn = $this->getOurNumber() . CalculoDV::bbOurNumber($this->getOurNumber());
         return strlen($nn) <= 17 ? substr_replace($nn, '-', -1, 0) : $nn;
     }
 
@@ -166,11 +138,11 @@ class Bb extends SlipAbstract implements BoletoContract
         if ($this->fieldFree) {
             return $this->fieldFree;
         }
-        $length = strlen($this->getConvenio());
-        $nossoNumero = $this->generateOurNumber();
+        $length = strlen($this->getCovenant());
+        $ourNumber = $this->generateOurNumber();
         if (strlen($this->getNumber()) > 10) {
-            if ($length == 6 && in_array($this->getWallet(), ['16', '18']) && Util::numberFormatGeral($this->getVariacaoCarteira(), 3) == '017') {
-                return $this->fieldFree = Util::numberFormatGeral($this->getConvenio(), 6) . $nossoNumero . '21';
+            if ($length == 6 && in_array($this->getWallet(), ['16', '18']) && Util::numberFormatGeral($this->getWalletVariation(), 3) == '017') {
+                return $this->fieldFree = Util::numberFormatGeral($this->getCovenant(), 6) . $ourNumber . '21';
             } else {
                 throw new Exception('Só é possível criar um boleto com mais de 10 dígitos no nosso número quando a carteira é 21 e o convênio possuir 6 dígitos.');
             }
@@ -178,9 +150,9 @@ class Bb extends SlipAbstract implements BoletoContract
         switch ($length) {
             case 4:
             case 6:
-                return $this->fieldFree = $nossoNumero . Util::numberFormatGeral($this->getAgency(), 4) . Util::numberFormatGeral($this->getAccount(), 8) . Util::numberFormatGeral($this->getWallet(), 2);
+                return $this->fieldFree = $ourNumber . Util::numberFormatGeral($this->getAgency(), 4) . Util::numberFormatGeral($this->getAccount(), 8) . Util::numberFormatGeral($this->getWallet(), 2);
             case 7:
-                return $this->fieldFree = '000000' . $nossoNumero . Util::numberFormatGeral($this->getWallet(), 2);
+                return $this->fieldFree = '000000' . $ourNumber . Util::numberFormatGeral($this->getWallet(), 2);
         }
         throw new Exception('O código do convênio precisa ter 4, 6 ou 7 dígitos!');
     }

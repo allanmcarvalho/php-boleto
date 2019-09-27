@@ -5,12 +5,13 @@ namespace PhpBoleto\Slip;
 use DateTime;
 use DateTimeInterface;
 use Exception;
+use PhpBoleto\Interfaces\Person\PersonInterface;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Persons\Person;
 use PhpBoleto\Slip\Render\Html;
 use PhpBoleto\Slip\Render\Pdf;
-use PhpBoleto\Interfaces\Person\PersonInterface;
-use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Tools\Util;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Class SlipAbstract
@@ -204,6 +205,13 @@ abstract class SlipAbstract implements SlipInterface
     protected $accountCheckDigit;
 
     /**
+     * Dígito da conta
+     *
+     * @var string
+     */
+    protected $covenant;
+
+    /**
      * Modalidade de cobrança do cliente, geralmente Cobrança Simples ou Registrada
      *
      * @var string
@@ -326,7 +334,6 @@ abstract class SlipAbstract implements SlipInterface
      * @throws Exception
      */
     public function __construct($params = [])
-
     {
         Util::fillClass($this, $params);
         // Marca a data de emissão para hoje, caso não especificada
@@ -528,6 +535,28 @@ abstract class SlipAbstract implements SlipInterface
     }
 
     /**
+     * Define o número do convênio
+     *
+     * @param $covenant
+     * @return SlipAbstract
+     */
+    public function setCovenant($covenant): SlipAbstract
+    {
+        $this->covenant = (string)$covenant;
+        return $this;
+    }
+
+    /**
+     * Retorna o número do convênio
+     *
+     * @return string
+     */
+    public function getCovenant()
+    {
+        return $this->covenant;
+    }
+
+    /**
      * Define o dígito verificador da conta
      *
      * @param string $accountCheckDigit
@@ -566,7 +595,7 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @return DateTimeInterface
      */
-    public function getDueDate(): DateTimeInterface
+    public function getDueDate(): ?DateTimeInterface
     {
         return $this->dueDate;
     }
@@ -588,7 +617,7 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @return DateTimeInterface
      */
-    public function getDiscountDate(): DateTimeInterface
+    public function getDiscountDate(): ?DateTimeInterface
     {
         return $this->discountDate;
     }
@@ -610,7 +639,7 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @return DateTimeInterface
      */
-    public function getDocumentDate(): DateTimeInterface
+    public function getDocumentDate(): ?DateTimeInterface
     {
         return $this->documentDate;
     }
@@ -782,7 +811,7 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @return DateTimeInterface
      */
-    public function getProcessingDate(): DateTimeInterface
+    public function getProcessingDate(): ?DateTimeInterface
     {
         return $this->processingDate;
     }
@@ -979,7 +1008,7 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @return PersonInterface
      */
-    public function getGuarantor(): PersonInterface
+    public function getGuarantor(): ?PersonInterface
     {
         return $this->guarantor;
     }
@@ -1179,7 +1208,11 @@ abstract class SlipAbstract implements SlipInterface
      */
     public function getLogo(): string
     {
-        return $this->logo ? $this->logo : "http://dummyimage.com/300x70/f5/0.png&text=Sem+Logo";
+        if (!empty($this->logo) and is_file($this->logo)) {
+            return $this->logo;
+        } else {
+            return "http://dummyimage.com/300x70/f5/0.png&text=Sem+Logo";
+        }
     }
 
     /**
@@ -1426,7 +1459,22 @@ abstract class SlipAbstract implements SlipInterface
         $pdf->addBoleto($this);
         if ($print) $pdf->showPrint();
         if (!$showInstructions) $pdf->hideInstrucoes();
-        return $pdf->gerarBoleto('S', null);
+        return $pdf->generateSlip('S', null);
+    }
+
+    /**
+     * Render PDF
+     *
+     * @param bool $showInstructions
+     * @return StreamInterface
+     * @throws Exception
+     */
+    public function getStreamPDF(bool $showInstructions = true)
+    {
+        $pdf = new Pdf();
+        $pdf->addBoleto($this);
+        if (!$showInstructions) $pdf->hideInstrucoes();
+        return $pdf->generateStreamSlip();
     }
 
     /**

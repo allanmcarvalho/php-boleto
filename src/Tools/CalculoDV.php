@@ -19,7 +19,7 @@ class CalculoDV
         return Util::modulo11($contaCorrente, 2, 9, 0, 'X');
     }
 
-    public static function bbNossoNumero($nossoNumero)
+    public static function bbOurNumber($nossoNumero)
     {
         return strlen($nossoNumero) >= 17 ? null : Util::modulo11($nossoNumero);
     }
@@ -149,18 +149,18 @@ class CalculoDV
         return 11 - $resto;
     }
 
-    public static function banrisulNossoNumero($nossoNumero)
+    public static function banrisulOurNumber($ourNumber)
     {
-        return self::banrisulDuploDigito($nossoNumero);
+        return self::banrisulDoubleDigit($ourNumber);
     }
 
-    public static function banrisulDuploDigito($campo)
+    public static function banrisulDoubleDigit($field)
     {
-        $dv1 = Util::modulo10($campo);
-        $dv2 = Util::modulo11($campo . $dv1, 2, 7, 0, 10);
+        $dv1 = Util::modulo10($field);
+        $dv2 = Util::modulo11($field . $dv1, 2, 7, 0, 10);
         if ($dv2 == 10) {
             $dv1++;
-            $dv2 = Util::modulo11($campo . $dv1, 2, 7, 0, 10);
+            $dv2 = Util::modulo11($field . $dv1, 2, 7, 0, 10);
             if ($dv1 > 9) {
                 $dv1 = 0;
             }
@@ -180,7 +180,7 @@ class CalculoDV
         return Util::modulo11($n);
     }
 
-    public static function cefNossoNumero($nossoNumero)
+    public static function cefOurNumber($nossoNumero)
     {
         return Util::modulo11($nossoNumero);
     }
@@ -201,9 +201,9 @@ class CalculoDV
         return Util::modulo11($contaCorrente, 2, 9, 0, 'P');
     }
 
-    public static function bradescoNossoNumero($carteira, $nossoNumero)
+    public static function bradescoOurNumber($wallet, $ourNumber)
     {
-        return Util::modulo11($carteira . $nossoNumero, 2, 7, 0, 'P');
+        return Util::modulo11($wallet . $ourNumber, 2, 7, 0, 'P');
     }
 
     /*
@@ -253,11 +253,11 @@ class CalculoDV
         return Util::modulo11($agencia);
     }
 
-    public static function bancoobNossoNumero($agencia, $convenio, $numero_boleto)
+    public static function bancoobOurNumber($agency, $covenant, $slipNumber)
     {
-        $n = Util::numberFormatGeral($agencia, 4)
-            . Util::numberFormatGeral($convenio, 10)
-            . Util::numberFormatGeral($numero_boleto, 7);
+        $n = Util::numberFormatGeral($agency, 4)
+            . Util::numberFormatGeral($covenant, 10)
+            . Util::numberFormatGeral($slipNumber, 7);
 
         $chars = str_split($n, 1);
         $sums = str_split('3197319731973197319731973197', 1);

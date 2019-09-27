@@ -93,22 +93,22 @@ interface SlipInterface
     /**
      * @return DateTimeInterface
      */
-    public function getDueDate(): DateTimeInterface;
+    public function getDueDate(): ?DateTimeInterface;
 
     /**
      * @return DateTimeInterface
      */
-    public function getDiscountDate(): DateTimeInterface;
+    public function getDiscountDate(): ?DateTimeInterface;
 
     /**
      * @return DateTimeInterface
      */
-    public function getProcessingDate(): DateTimeInterface;
+    public function getProcessingDate(): ?DateTimeInterface;
 
     /**
      * @return DateTimeInterface
      */
-    public function getDocumentDate(): DateTimeInterface;
+    public function getDocumentDate(): ?DateTimeInterface;
 
     /**
      * @return mixed
@@ -152,7 +152,7 @@ interface SlipInterface
     /**
      * @return PersonInterface
      */
-    public function getGuarantor(): PersonInterface;
+    public function getGuarantor(): ?PersonInterface;
 
     /**
      * @return PersonInterface

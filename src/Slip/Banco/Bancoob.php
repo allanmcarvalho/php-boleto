@@ -1,25 +1,28 @@
 <?php
+
 namespace PhpBoleto\Slip\Banco;
 
+use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Bancoob
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Bancoob extends SlipAbstract implements BoletoContract
+class Bancoob extends SlipAbstract implements SlipInterface
 {
     /**
      * Bancoob constructor.
      * @param array $params
+     * @throws Exception
      */
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->addRequiredFiled('convenio');
+        $this->addRequiredFiled('covenant');
     }
 
     /**
@@ -32,10 +35,10 @@ class Bancoob extends SlipAbstract implements BoletoContract
      * Define as carteiras disponíveis para este banco
      * @var array
      */
-    protected $wallets = ['1','3'];
+    protected $wallets = ['1', '3'];
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      * @var string
      */
     protected $documentTypes = [
@@ -45,44 +48,28 @@ class Bancoob extends SlipAbstract implements BoletoContract
     ];
 
     /**
-     * Define o número do convênio (4, 6 ou 7 caracteres)
+     * Código do cliente junto ao banco.
      *
      * @var string
      */
-    protected $convenio;
+    protected $clientCode;
 
     /**
-     * Define o número do convênio. Sempre use string pois a quantidade de caracteres é validada.
+     * Parcela do boleto.
      *
-     * @param  string $convenio
-     * @return Bancoob
+     * @var string
      */
-    public function setConvenio($convenio)
-    {
-        $this->convenio = $convenio;
-        return $this;
-    }
-
-    /**
-     * Retorna o número do convênio
-     *
-     * @return string
-     */
-    public function getConvenio()
-    {
-        return $this->convenio;
-    }
+    protected $quota;
 
     /**
      * Gera o Nosso Número.
      *
-     * @throws \Exception
      * @return string
+     * @throws Exception
      */
     protected function generateOurNumber()
     {
-        return $this->getNumber()
-            . CalculoDV::bancoobNossoNumero($this->getAgency(), $this->getConvenio(), $this->getNumber());
+        return $this->getNumber() . CalculoDV::bancoobOurNumber($this->getAgency(), $this->getCovenant(), $this->getNumber());
     }
 
     /**
@@ -99,7 +86,7 @@ class Bancoob extends SlipAbstract implements BoletoContract
      * Método para gerar o código da posição de 20 a 44
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getFieldFree()
     {
@@ -112,75 +99,60 @@ class Bancoob extends SlipAbstract implements BoletoContract
         $campoLivre = Util::numberFormatGeral($this->getWallet(), 1);
         $campoLivre .= Util::numberFormatGeral($this->getAgency(), 4);
         $campoLivre .= Util::numberFormatGeral($this->getWallet(), 2);
-        $campoLivre .= Util::numberFormatGeral($this->getConvenio(), 7);
+        $campoLivre .= Util::numberFormatGeral($this->getCovenant(), 7);
         $campoLivre .= Util::numberFormatGeral($nossoNumero, 8);
-        $campoLivre .= Util::numberFormatGeral($this->getParcela(), 3); //Numero da parcela - Não implementado
+        $campoLivre .= Util::numberFormatGeral($this->getQuota(), 3); //Numero da parcela - Não implementado
 
         return $this->fieldFree = $campoLivre;
     }
 
     /**
-     * Método para gerar a Agencia e o Codigo do Beneficiario
+     * Método para gerar a Agencia e o Código do Beneficiário
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
-    public function getAgencyAndAccount()
+    public function getAgencyAndAccount(): string
     {
         $agencia = $this->getAgency();
-        $conta = $this->getCodigoCliente();
+        $conta = $this->getClientCode();
 
         return $agencia . ' / ' . $conta;
     }
 
     /**
-     * Codigo do cliente junto ao banco.
+     * Seta o código do cliente.
      *
-     * @var string
-     */
-    protected $codigoCliente;
-
-    /**
-     * Seta o codigo do cliente.
-     *
-     * @param mixed $codigoCliente
+     * @param mixed $clientCode
      *
      * @return $this
      */
-    public function setCodigoCliente($codigoCliente)
+    public function setClientCode($clientCode)
     {
-        $this->codigoCliente = $codigoCliente;
-
+        $this->clientCode = $clientCode;
         return $this;
     }
 
     /**
-     * Retorna o codigo do cliente.
+     * Retorna o código do cliente.
      *
      * @return string
      */
-    public function getCodigoCliente()
+    public function getClientCode()
     {
-        return $this->codigoCliente;
+        return $this->clientCode;
     }
-
-    /**
-     * Parcela do boleto.
-     *
-     * @var string
-     */
-    protected $parcela;
 
     /**
      * Seta a Parcela.
      *
-     * @param mixed $parcela
+     * @param mixed $quota
      *
      * @return $this
      */
-    public function setParcela($parcela)
+    public function setQuota($quota)
     {
-        $this->parcela = $parcela;
+        $this->quota = $quota;
 
         return $this;
     }
@@ -190,9 +162,9 @@ class Bancoob extends SlipAbstract implements BoletoContract
      *
      * @return string
      */
-    public function getParcela()
+    public function getQuota()
     {
-        return $this->parcela;
+        return $this->quota;
     }
 
 }

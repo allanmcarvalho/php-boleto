@@ -2,16 +2,17 @@
 
 namespace PhpBoleto\Slip\Banco;
 
+use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Banrisul
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Banrisul extends SlipAbstract implements BoletoContract
+class Banrisul extends SlipAbstract implements SlipInterface
 {
     /**
      * Código do banco
@@ -52,12 +53,12 @@ class Banrisul extends SlipAbstract implements BoletoContract
      * @param int $automaticDrop
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setAutomaticDropAfter($automaticDrop)
+    public function setAutomaticDropAfter(int $automaticDrop)
     {
         if ($this->getProtestAfter() > 0) {
-            throw new \Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
+            throw new Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
         }
         $automaticDrop = (int)$automaticDrop;
         $this->automaticDropAfter = $automaticDrop > 0 ? $automaticDrop : 0;
@@ -73,7 +74,7 @@ class Banrisul extends SlipAbstract implements BoletoContract
     {
         $numero_boleto = $this->getNumber();
         $nossoNumero = Util::numberFormatGeral($numero_boleto, 8)
-            . CalculoDV::banrisulNossoNumero(Util::numberFormatGeral($numero_boleto, 8));
+            . CalculoDV::banrisulOurNumber(Util::numberFormatGeral($numero_boleto, 8));
         return $nossoNumero;
     }
 
@@ -91,7 +92,7 @@ class Banrisul extends SlipAbstract implements BoletoContract
      * Método para gerar o código da posição de 20 a 44
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getFieldFree()
     {
@@ -118,7 +119,7 @@ class Banrisul extends SlipAbstract implements BoletoContract
         $this->fieldFree .= '40';
 
         // Duplo digito => 43 - 44 | Valor: calculado(00) ´2´
-        $this->fieldFree .= CalculoDV::banrisulDuploDigito(Util::onlyNumbers($this->fieldFree));
+        $this->fieldFree .= CalculoDV::banrisulDoubleDigit(Util::onlyNumbers($this->fieldFree));
         return $this->fieldFree;
     }
 }

@@ -2,16 +2,17 @@
 
 namespace PhpBoleto\Slip\Banco;
 
+use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Itau
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Itau extends SlipAbstract implements BoletoContract
+class Itau extends SlipAbstract implements SlipInterface
 {
 
     /**
@@ -45,7 +46,7 @@ class Itau extends SlipAbstract implements BoletoContract
     protected $wallets = ['112', '115', '188', '109', '121', '180', '175'];
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      *
      * @var string
      */
@@ -70,12 +71,12 @@ class Itau extends SlipAbstract implements BoletoContract
      * @param int $automaticDrop
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setAutomaticDropAfter($automaticDrop)
+    public function setAutomaticDropAfter(int $automaticDrop)
     {
         if ($this->getProtestAfter() > 0) {
-            throw new \Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
+            throw new Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
         }
         $automaticDrop = (int)$automaticDrop;
         $this->automaticDropAfter = $automaticDrop > 0 ? $automaticDrop : 0;
@@ -86,7 +87,7 @@ class Itau extends SlipAbstract implements BoletoContract
      * Gera o Nosso Número.
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function generateOurNumber()
     {
@@ -112,18 +113,18 @@ class Itau extends SlipAbstract implements BoletoContract
      * Método para gerar o código da posição de 20 a 44
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getFieldFree()
     {
         if ($this->fieldFree) {
             return $this->fieldFree;
         }
-        $nosso_numero = Util::numberFormatGeral($this->getOurNumber(), 9);
-        $carteira = Util::numberFormatGeral($this->getWallet(), 3);
-        $agencia = Util::numberFormatGeral($this->getAgency(), 4);
-        $conta = Util::numberFormatGeral($this->getAccount(), 5);
-        $dvAgConta = CalculoDV::itauContaCorrente($agencia, $conta);
-        return $this->fieldFree = $carteira . $nosso_numero . $agencia . $conta . $dvAgConta . '000';
+        $ourNumber = Util::numberFormatGeral($this->getOurNumber(), 9);
+        $wallet = Util::numberFormatGeral($this->getWallet(), 3);
+        $agency = Util::numberFormatGeral($this->getAgency(), 4);
+        $account = Util::numberFormatGeral($this->getAccount(), 5);
+        $dvAgConta = CalculoDV::itauContaCorrente($agency, $account);
+        return $this->fieldFree = $wallet . $ourNumber . $agency . $account . $dvAgConta . '000';
     }
 }

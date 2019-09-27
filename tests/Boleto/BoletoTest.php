@@ -2,9 +2,11 @@
 
 namespace PhpBoleto\Tests\Boleto;
 
+use Carbon\Carbon;
+use Exception;
+use PhpBoleto\Person;
 use PhpBoleto\Slip\Banco as Boleto;
 use PhpBoleto\Slip\Render\Pdf;
-use PhpBoleto\Person;
 use PhpBoleto\Tests\TestCase;
 
 class BoletoTest extends TestCase
@@ -55,7 +57,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Banrisul(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '041.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -77,7 +79,7 @@ class BoletoTest extends TestCase
         $pdf = new Pdf();
         $pdf->addBoletos([$boleto, $boleto]);
 
-        $this->assertNotNull($pdf->gerarBoleto($pdf::OUTPUT_STRING));
+        $this->assertNotNull($pdf->generateSlip($pdf::OUTPUT_STRING));
     }
 
     public function testSave()
@@ -85,7 +87,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Banrisul(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '041.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -112,7 +114,7 @@ class BoletoTest extends TestCase
 
         $pdf = new Pdf();
         $pdf->addBoletos([$boleto, $boleto]);
-        $file2 = $pdf->gerarBoleto($pdf::OUTPUT_SAVE, $file);
+        $file2 = $pdf->generateSlip($pdf::OUTPUT_SAVE, $file);
 
         $this->assertEquals($file, $file2);
         $this->assertFileExists($file);
@@ -123,7 +125,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Banrisul(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '041.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -150,19 +152,19 @@ class BoletoTest extends TestCase
 
         $pdf = new Pdf();
         $pdf->addBoletos([$boleto, $boleto]);
-        $file2 = $pdf->gerarBoleto($pdf::OUTPUT_SAVE, $file, true);
+        $file2 = $pdf->generateSlip($pdf::OUTPUT_SAVE, $file, true);
 
         $this->assertEquals($file, $file2);
         $this->assertFileExists($file);
     }
 
     /**
-     * @expectedException     \Exception
+     * @expectedException     Exception
      */
     public function testSemBoletoAdicionado()
     {
         $pdf = new Pdf();
-        $pdf->gerarBoleto($pdf::OUTPUT_STRING);
+        $pdf->generateSlip($pdf::OUTPUT_STRING);
     }
 
     public function testBoletoBanrisul()
@@ -170,7 +172,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Banrisul(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '041.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -198,7 +200,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Bb(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR. '001.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -224,7 +226,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Bradesco(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '237.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -252,7 +254,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Caixa(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '104.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100.41,
                 'multa' => false,
                 'juros' => false,
@@ -281,7 +283,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Hsbc(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '399.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -310,7 +312,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Itau(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '341.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -338,7 +340,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Santander(
             [
                 'logo' => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '033.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -366,7 +368,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Sicredi(
             [
                 'logo'                   => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '748.png',
-                'dataVencimento'         => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor'                  => 100,
                 'multa'                  => false,
                 'juros'                  => false,
@@ -395,7 +397,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Bancoob(
             [
                 'logo'                   => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '756.png',
-                'dataVencimento'         => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor'                  => 100,
                 'multa'                  => false,
                 'juros'                  => false,
@@ -424,7 +426,7 @@ class BoletoTest extends TestCase
         $boleto = new Boleto\Bnb(
             [
                 'logo'                   => realpath(__DIR__ . '/../../logos/') . DIRECTORY_SEPARATOR . '004.png',
-                'dataVencimento'         => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor'                  => 100,
                 'multa'                  => 3.0,
                 'juros'                  => 1.5,

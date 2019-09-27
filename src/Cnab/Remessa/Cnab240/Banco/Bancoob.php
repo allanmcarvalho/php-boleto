@@ -1,6 +1,7 @@
 <?php
 namespace PhpBoleto\Cnab\Remessa\Cnab240\Banco;
 
+use Exception;
 use PhpBoleto\CalculoDV;
 use PhpBoleto\Cnab\Remessa\Cnab240\AbstractRemessa;
 use PhpBoleto\Interfaces\Cnab\Remessa as RemessaContract;
@@ -161,7 +162,7 @@ class Bancoob extends AbstractRemessa implements RemessaContract
      * Retorna o codigo de transmissão.
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     public function getCodigoTransmissao()
     {
@@ -226,7 +227,7 @@ class Bancoob extends AbstractRemessa implements RemessaContract
      * @param BoletoContract $boleto
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     protected function segmentoP($nSequencialLote, BoletoContract $boleto)
     {
@@ -245,7 +246,7 @@ class Bancoob extends AbstractRemessa implements RemessaContract
         $this->add(37, 37, ''); // Reservado (Uso Banco)
 
         $this->add(38, 47, Util::formatCnab(9, $boleto->getOurNumber(), 10));
-        $this->add(48, 49, Util::formatCnab(9, $boleto->getParcela(), 2));
+        $this->add(48, 49, Util::formatCnab(9, $boleto->getQuota(), 2));
         $this->add(50, 51, '01');
         $this->add(52, 52, '1');
         $this->add(53, 57, '');
@@ -296,7 +297,7 @@ class Bancoob extends AbstractRemessa implements RemessaContract
      * @param integer $nSequencialLote
      * @param BoletoContract $boleto
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function segmentoQ($nSequencialLote, BoletoContract $boleto)
     {
@@ -333,7 +334,7 @@ class Bancoob extends AbstractRemessa implements RemessaContract
      * @param integer $nSequencialLote
      * @param BoletoContract $boleto
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function segmentoR($nSequencialLote, BoletoContract $boleto)
     {
@@ -366,7 +367,7 @@ class Bancoob extends AbstractRemessa implements RemessaContract
      * @param integer $nSequencialLote
      * @param BoletoContract $boleto
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function segmentoS($nSequencialLote, BoletoContract $boleto)
     {

@@ -3,8 +3,8 @@ namespace PhpBoleto\Cnab\Remessa\Cnab400\Banco;
 
 use Carbon\Carbon;
 use PhpBoleto\Cnab\Remessa\Cnab400\AbstractRemessa;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
 use PhpBoleto\Interfaces\Cnab\Remessa as RemessaContract;
+use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
 use PhpBoleto\Util;
 
 /**
@@ -121,7 +121,7 @@ class Sicredi extends AbstractRemessa implements RemessaContract
      */
     public function addBoleto(BoletoContract $boleto)
     {
-        if (!$boleto->isComRegistro()) {
+        if (!$boleto->isRegistry()) {
             return $this;
         }
 

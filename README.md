@@ -1,8 +1,12 @@
-# Yii2 Boleto, Remessa e Retorno
-Pacote para gerar boletos, remessas e leitura de retorno.
+# Boleto PHP
+Ferramenta para gerar boletos, remessas e fazer leitura de retornos. Projeto iniciado em cima do fork de [newerton/yii2-boleto-remessa](https://github.com/newerton/yii2-boleto-remessa).
+
+Agradecimentos a [Newerton](https://github.com/newerton) por todo o trabalho feito até o momento do fork.
 
 ## Requerimentos
 - [PHP Extensão Intl](http://php.net/manual/pt_BR/book.intl.php)
+- [PHP Extensão Multibyte String  (MbString)](https://www.php.net/manual/pt_BR/book.mbstring.php)
+- [PHP >=7.1.0](https://www.php.net/releases/7_1_0.php)
 
 
 ## Links
@@ -30,13 +34,13 @@ Banco | Boleto | Remessa 400 | Remessa 240 | Retorno 400 | Retorno 240
 Via composer:
 
 ```
-composer require newerton/yii2-boleto-remessa
+composer require allanmcarvalho/php-boleto
 ```
 
 Ou adicione manualmente ao seu composer.json:
 
 ```
-"newerton/yii2-boleto-remessa": "dev-master"
+"allanmcarvalho/php-boleto": "dev-master"
 ```
 
 ## Gerar boleto

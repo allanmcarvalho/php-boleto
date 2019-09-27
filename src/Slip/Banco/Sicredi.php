@@ -2,20 +2,22 @@
 
 namespace PhpBoleto\Slip\Banco;
 
+use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Sicredi
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Sicredi extends SlipAbstract implements BoletoContract
+class Sicredi extends SlipAbstract implements SlipInterface
 {
     /**
      * Sicredi constructor.
      * @param array $params
+     * @throws Exception
      */
     public function __construct(array $params = [])
     {
@@ -45,7 +47,7 @@ class Sicredi extends SlipAbstract implements BoletoContract
     protected $wallets = ['1', '2', '3'];
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      *
      * @var string
      */
@@ -68,17 +70,17 @@ class Sicredi extends SlipAbstract implements BoletoContract
      *
      * @var bool
      */
-    protected $registro = true;
+    protected $registry = true;
 
     /**
      * Código do posto do cliente no banco.
      *
      * @var int
      */
-    protected $posto;
+    protected $post;
 
     /**
-     * Byte que compoe o nosso número.
+     * Byte que compõe o nosso número.
      *
      * @var int
      */
@@ -87,12 +89,12 @@ class Sicredi extends SlipAbstract implements BoletoContract
     /**
      * Define se possui ou não registro
      *
-     * @param  bool $registro
+     * @param bool $registry
      * @return $this
      */
-    public function setComRegistro(bool $registro)
+    public function setRegistry(bool $registry)
     {
-        $this->registro = $registro;
+        $this->registry = $registry;
         return $this;
     }
 
@@ -101,20 +103,20 @@ class Sicredi extends SlipAbstract implements BoletoContract
      *
      * @return bool
      */
-    public function isComRegistro()
+    public function isRegistry()
     {
-        return $this->registro;
+        return $this->registry;
     }
 
     /**
      * Define o posto do cliente
      *
-     * @param  int $posto
+     * @param int $post
      * @return $this
      */
-    public function setPosto($posto)
+    public function setPost($post)
     {
-        $this->posto = $posto;
+        $this->post = $post;
         return $this;
     }
 
@@ -123,23 +125,23 @@ class Sicredi extends SlipAbstract implements BoletoContract
      *
      * @return int
      */
-    public function getPosto()
+    public function getPost()
     {
-        return $this->posto;
+        return $this->post;
     }
 
     /**
      * Define o byte
      *
-     * @param  int $byte
+     * @param int $byte
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
     public function setByte($byte)
     {
         if ($byte > 9) {
-            throw new \Exception('O byte deve ser compreendido entre 1 e 9');
+            throw new Exception('O byte deve ser compreendido entre 1 e 9');
         }
         $this->byte = $byte;
         return $this;
@@ -160,9 +162,9 @@ class Sicredi extends SlipAbstract implements BoletoContract
      *
      * @return string
      */
-    public function getAgencyAndAccount()
+    public function getAgencyAndAccount(): string
     {
-        return sprintf('%04s.%02s.%05s', $this->getAgency(), $this->getPosto(), $this->getAccount());
+        return sprintf('%04s.%02s.%05s', $this->getAgency(), $this->getPost(), $this->getAccount());
     }
 
     /**
@@ -172,12 +174,12 @@ class Sicredi extends SlipAbstract implements BoletoContract
      */
     protected function generateOurNumber()
     {
-        $ano = $this->getDocumentDate()->format('y');
+        $year = $this->getDocumentDate()->format('y');
         $byte = $this->getByte();
-        $numero_boleto = Util::numberFormatGeral($this->getNumber(), 5);
-        $nossoNumero = $ano . $byte . $numero_boleto
-            . CalculoDV::sicrediNossoNumero($this->getAgency(), $this->getPosto(), $this->getAccount(), $ano, $byte, $numero_boleto);
-        return $nossoNumero;
+        $slipNumber = Util::numberFormatGeral($this->getNumber(), 5);
+        $ourNumber = $year . $byte . $slipNumber
+            . CalculoDV::sicrediNossoNumero($this->getAgency(), $this->getPost(), $this->getAccount(), $year, $byte, $slipNumber);
+        return $ourNumber;
     }
 
     /**
@@ -194,7 +196,7 @@ class Sicredi extends SlipAbstract implements BoletoContract
      * Método para gerar o código da posição de 20 a 44
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getFieldFree()
     {
@@ -202,14 +204,14 @@ class Sicredi extends SlipAbstract implements BoletoContract
             return $this->fieldFree;
         }
 
-        $tipo_cobranca = $this->isComRegistro() ? '1' : '3';
-        $carteira = Util::numberFormatGeral($this->getWallet(), 1);
-        $nosso_numero = $this->getOurNumber();
-        $agencia = Util::numberFormatGeral($this->getAgency(), 4);
-        $posto = Util::numberFormatGeral($this->getPosto(), 2);
-        $conta = Util::numberFormatGeral($this->getAccount(), 5);
+        $chargeType = $this->isRegistry() ? '1' : '3';
+        $wallet = Util::numberFormatGeral($this->getWallet(), 1);
+        $ourNumber = $this->getOurNumber();
+        $agency = Util::numberFormatGeral($this->getAgency(), 4);
+        $post = Util::numberFormatGeral($this->getPost(), 2);
+        $account = Util::numberFormatGeral($this->getAccount(), 5);
 
-        $this->fieldFree = $tipo_cobranca . $carteira . $nosso_numero . $agencia . $posto . $conta . '10';
+        $this->fieldFree = $chargeType . $wallet . $ourNumber . $agency . $post . $account . '10';
         return $this->fieldFree .= Util::modulo11($this->fieldFree);
     }
 }

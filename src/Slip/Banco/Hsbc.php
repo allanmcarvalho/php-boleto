@@ -2,24 +2,26 @@
 
 namespace PhpBoleto\Slip\Banco;
 
+use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Hsbc
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Hsbc extends SlipAbstract implements BoletoContract
+class Hsbc extends SlipAbstract implements SlipInterface
 {
     /**
      * Hsbc constructor.
      * @param array $params
+     * @throws Exception
      */
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->addRequiredFiled('range', 'contaDv');
+        $this->addRequiredFiled('range', 'accountCheckDigit');
     }
 
     /**
@@ -37,7 +39,7 @@ class Hsbc extends SlipAbstract implements BoletoContract
     protected $wallets = ['CSB'];
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      *
      * @var string
      */
@@ -88,10 +90,10 @@ class Hsbc extends SlipAbstract implements BoletoContract
     /**
      * Define o campo Espécie Doc, HSBC sempre PD
      *
-     * @param  string $documentType
+     * @param string $documentType
      * @return SlipAbstract
      */
-    public function setDocumentType($documentType)
+    public function setDocumentType(string $documentType): SlipAbstract
     {
         $this->documentType = 'PD';
         return $this;
@@ -102,19 +104,19 @@ class Hsbc extends SlipAbstract implements BoletoContract
      *
      * @return string
      */
-    public function getAgencyAndAccount()
+    public function getAgencyAndAccount(): string
     {
-        $agencia = $this->getAgencyCheckDigit() !== null ? $this->getAgency() . '-' . $this->getAgencyCheckDigit() : $this->getAgency();
+        $agency = $this->getAgencyCheckDigit() !== null ? $this->getAgency() . '-' . $this->getAgencyCheckDigit() : $this->getAgency();
 
         if ($this->getAccountCheckDigit() !== null && strlen($this->getAccountCheckDigit()) == 1) {
-            $conta = substr($this->getAccount(), 0, -1) . '-' . substr($this->getAccount(), -1) . $this->getAccountCheckDigit();
+            $account = substr($this->getAccount(), 0, -1) . '-' . substr($this->getAccount(), -1) . $this->getAccountCheckDigit();
         } elseif ($this->getAccountCheckDigit() !== null && strlen($this->getAccountCheckDigit()) == 2) {
-            $conta = substr($this->getAccount(), 0, -1) . '-' . substr($this->getAccount(), -1) . $this->getAccountCheckDigit();
+            $account = substr($this->getAccount(), 0, -1) . '-' . substr($this->getAccount(), -1) . $this->getAccountCheckDigit();
         } else {
-            $conta = $this->getAccount();
+            $account = $this->getAccount();
         }
 
-        return $agencia . ' / ' . $conta;
+        return $agency . ' / ' . $account;
     }
 
     /**
@@ -125,9 +127,9 @@ class Hsbc extends SlipAbstract implements BoletoContract
     protected function generateOurNumber()
     {
         $range = Util::numberFormatGeral($this->getRange(), 5);
-        $numero_boleto = Util::numberFormatGeral($this->getNumber(), 5);
-        $dv = Util::modulo11($range . $numero_boleto, 2, 7);
-        return $range . $numero_boleto . $dv;
+        $slipNumber = Util::numberFormatGeral($this->getNumber(), 5);
+        $dv = Util::modulo11($range . $slipNumber, 2, 7);
+        return $range . $slipNumber . $dv;
     }
 
     /**
@@ -151,12 +153,12 @@ class Hsbc extends SlipAbstract implements BoletoContract
             return $this->fieldFree;
         }
 
-        $ag = Util::numberFormatGeral($this->getAgency(), 4);
-        $cc = Util::numberFormatGeral($this->getAccount(), 6);
-        $agCc = $ag . $cc . ($this->getAccountCheckDigit() ? $this->getAccountCheckDigit() : Util::modulo11($ag . $cc));
+        $agency = Util::numberFormatGeral($this->getAgency(), 4);
+        $account = Util::numberFormatGeral($this->getAccount(), 6);
+        $agencyAndAccount = $agency . $account . ($this->getAccountCheckDigit() ? $this->getAccountCheckDigit() : Util::modulo11($agency . $account));
 
         return $this->fieldFree = $this->getOurNumber() .
-            $agCc .
+            $agencyAndAccount .
             '00' . // Codigo da carteira
             '1'; // Codigo do aplicativo
     }

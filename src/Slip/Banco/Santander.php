@@ -2,25 +2,27 @@
 
 namespace PhpBoleto\Slip\Banco;
 
+use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Santander
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Santander extends SlipAbstract implements BoletoContract
+class Santander extends SlipAbstract implements SlipInterface
 {
     /**
      * Santander constructor.
      * @param array $params
+     * @throws Exception
      */
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->setRequiredFields('numero', 'conta', 'carteira');
+        $this->setRequiredFields('number', 'account', 'wallet');
     }
 
     /**
@@ -38,7 +40,7 @@ class Santander extends SlipAbstract implements BoletoContract
     protected $wallets = ['101', '201'];
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      *
      * @var string
      */
@@ -66,7 +68,7 @@ class Santander extends SlipAbstract implements BoletoContract
     protected $ios = 0;
 
     /**
-     * Variaveis adicionais.
+     * Variáveis adicionais.
      *
      * @var array
      */
@@ -79,9 +81,9 @@ class Santander extends SlipAbstract implements BoletoContract
      *
      * @param  string $carteira
      * @return SlipAbstract
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setWallet($carteira)
+    public function setWallet($carteira): SlipAbstract
     {
         switch ($carteira) {
             case '1':
@@ -120,15 +122,15 @@ class Santander extends SlipAbstract implements BoletoContract
      *
      * @param int $automaticDrop
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setAutomaticDropAfter($automaticDrop)
+    public function setAutomaticDropAfter(int $automaticDrop)
     {
         if ($this->getProtestAfter() > 0) {
-            throw new \Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
+            throw new Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
         }
         if (!in_array($automaticDrop, [15, 30])) {
-            throw new \Exception('O Banco Santander so aceita 15 ou 30 dias após o vencimento para baixa automática');
+            throw new Exception('O Banco Santander so aceita 15 ou 30 dias após o vencimento para baixa automática');
         }
         $automaticDrop = (int)$automaticDrop;
         $this->automaticDropAfter = $automaticDrop > 0 ? $automaticDrop : 0;
@@ -144,9 +146,9 @@ class Santander extends SlipAbstract implements BoletoContract
      */
     protected function generateOurNumber()
     {
-        $numero_boleto = $this->getNumber();
-        return Util::numberFormatGeral($numero_boleto, 7)
-            . CalculoDV::santanderNossoNumero($numero_boleto);
+        $ourNumber = $this->getNumber();
+        return Util::numberFormatGeral($ourNumber, 7)
+            . CalculoDV::santanderNossoNumero($ourNumber);
     }
 
     /**

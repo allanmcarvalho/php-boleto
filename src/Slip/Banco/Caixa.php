@@ -2,25 +2,27 @@
 
 namespace PhpBoleto\Slip\Banco;
 
+use Exception;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Caixa
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Caixa extends SlipAbstract implements BoletoContract
+class Caixa extends SlipAbstract implements SlipInterface
 {
     /**
      * Caixa constructor.
      * @param array $params
+     * @throws Exception
      */
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->setRequiredFields('numero', 'agencia', 'carteira', 'codigoCliente');
+        $this->setRequiredFields('number', 'agency', 'wallet', 'clientCode');
     }
 
     /**
@@ -38,7 +40,7 @@ class Caixa extends SlipAbstract implements BoletoContract
     protected $wallets = ['RG', 'SR'];
 
     /**
-     * Espécie do documento, coódigo para remessa
+     * Espécie do documento, código para remessa
      *
      * @var string
      */
@@ -51,62 +53,62 @@ class Caixa extends SlipAbstract implements BoletoContract
     ];
 
     /**
-     * Codigo do cliente junto ao banco.
+     * Código do cliente junto ao banco.
      *
      * @var string
      */
-    protected $codigoCliente;
+    protected $clientCode;
 
     /**
-     * Seta o codigo do cliente.
+     * Seta o código do cliente.
      *
-     * @param mixed $codigoCliente
+     * @param mixed $clientCode
      *
      * @return $this
      */
-    public function setCodigoCliente($codigoCliente)
+    public function setClientCode($clientCode)
     {
-        $this->codigoCliente = $codigoCliente;
+        $this->clientCode = $clientCode;
 
         return $this;
     }
 
     /**
-     * Retorna o codigo do cliente.
+     * Retorna o código do cliente.
      *
      * @return string
      */
-    public function getCodigoCliente()
+    public function getClientCode()
     {
-        return $this->codigoCliente;
+        return $this->clientCode;
     }
 
     /**
-     * Retorna o codigo do cliente como se fosse a conta
+     * Retorna o código do cliente como se fosse a conta
      * ja que a caixa não faz uso da conta para nada.
      *
      * @return string
      */
     public function getAccount()
     {
-        return $this->getCodigoCliente();
+        return $this->getClientCode();
     }
 
     /**
      * Gera o Nosso Número.
      *
-     * @throws \Exception
      * @return string
+     *@throws Exception
      */
     protected function generateOurNumber()
     {
         $numero_boleto = $this->getNumber();
-        $composicao = '1';
+        $composition = '1';
         if ($this->getWallet() == 'SR') {
-            $composicao = '2';
+            $composition = '2';
         }
 
-        $carteira = $composicao . '4';
+        $carteira = $composition . '4';
         // As 15 próximas posições no nosso número são a critério do beneficiário, utilizando o sequencial
         // Depois, calcula-se o código verificador por módulo 11
         $numero = $carteira . Util::numberFormatGeral($numero_boleto, 15);
@@ -120,7 +122,7 @@ class Caixa extends SlipAbstract implements BoletoContract
      */
     public function getOurNumberCustom()
     {
-        return $this->getOurNumber() . '-' . CalculoDV::cefNossoNumero($this->getOurNumber());
+        return $this->getOurNumber() . '-' . CalculoDV::cefOurNumber($this->getOurNumber());
     }
 
     /**
@@ -129,12 +131,12 @@ class Caixa extends SlipAbstract implements BoletoContract
      * @param int $automaticDrop
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setAutomaticDropAfter($automaticDrop)
+    public function setAutomaticDropAfter(int $automaticDrop)
     {
         if ($this->getProtestAfter() > 0) {
-            throw new \Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
+            throw new Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
         }
         $automaticDrop = (int)$automaticDrop;
         $this->automaticDropAfter = $automaticDrop > 0 ? $automaticDrop : 0;
@@ -145,31 +147,31 @@ class Caixa extends SlipAbstract implements BoletoContract
      * Método para gerar o código da posição de 20 a 44
      *
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getFieldFree()
     {
         if ($this->fieldFree) {
             return $this->fieldFree;
         }
-        $nossoNumero = Util::numberFormatGeral($this->generateOurNumber(), 17);
-        $beneficiario = Util::numberFormatGeral($this->getCodigoCliente(), 6);
+        $ourNumber = Util::numberFormatGeral($this->generateOurNumber(), 17);
+        $beneficiary = Util::numberFormatGeral($this->getClientCode(), 6);
         // Código do beneficiário + DV]
-        $campoLivre = $beneficiario . Util::modulo11($beneficiario);
+        $fieldFree = $beneficiary . Util::modulo11($beneficiary);
         // Sequencia 1 (posições 3-5 NN) + Constante 1 (1 => registrada, 2 => sem registro)
         $carteira = $this->getWallet();
         if ($carteira == 'SR') {
-            $constante = '2';
+            $constant = '2';
         } else {
-            $constante = '1';
+            $constant = '1';
         }
-        $campoLivre .= substr($nossoNumero, 2, 3) . $constante;
+        $fieldFree .= substr($ourNumber, 2, 3) . $constant;
         // Sequencia 2 (posições 6-8 NN) + Constante 2 (4-Beneficiário)
-        $campoLivre .= substr($nossoNumero, 5, 3) . '4';
+        $fieldFree .= substr($ourNumber, 5, 3) . '4';
         // Sequencia 3 (posições 9-17 NN)
-        $campoLivre .= substr($nossoNumero, 8, 9);
+        $fieldFree .= substr($ourNumber, 8, 9);
         // DV do Campo Livre
-        $campoLivre .= Util::modulo11($campoLivre);
-        return $this->fieldFree = $campoLivre;
+        $fieldFree .= Util::modulo11($fieldFree);
+        return $this->fieldFree = $fieldFree;
     }
 }

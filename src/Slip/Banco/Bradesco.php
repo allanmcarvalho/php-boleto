@@ -2,17 +2,17 @@
 
 namespace PhpBoleto\Slip\Banco;
 
-use PhpBoleto\Slip\SlipAbstract;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use Exception;
 use PhpBoleto\Interfaces\Slip\SlipInterface;
-use PhpBoleto\Util;
+use PhpBoleto\Slip\SlipAbstract;
+use PhpBoleto\Tools\CalculoDV;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Bradesco
  * @package PhpBoleto\SlipInterface\Banco
  */
-class Bradesco extends SlipAbstract implements BoletoContract
+class Bradesco extends SlipAbstract implements SlipInterface
 {
     /**
      * Código do banco
@@ -72,7 +72,7 @@ class Bradesco extends SlipAbstract implements BoletoContract
     protected function generateOurNumber()
     {
         return Util::numberFormatGeral($this->getNumber(), 11)
-            . CalculoDV::bradescoNossoNumero($this->getWallet(), $this->getNumber());
+            . CalculoDV::bradescoOurNumber($this->getWallet(), $this->getNumber());
     }
 
     /**
@@ -81,12 +81,12 @@ class Bradesco extends SlipAbstract implements BoletoContract
      * @param int $automaticDrop
      *
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setAutomaticDropAfter($automaticDrop)
+    public function setAutomaticDropAfter(int $automaticDrop)
     {
         if ($this->getProtestAfter() > 0) {
-            throw new \Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
+            throw new Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
         }
         $automaticDrop = (int)$automaticDrop;
         $this->automaticDropAfter = $automaticDrop > 0 ? $automaticDrop : 0;
