@@ -77,7 +77,7 @@ class BoletoTest extends TestCase
         );
 
         $pdf = new Pdf();
-        $pdf->addBoletos([$boleto, $boleto]);
+        $pdf->addSlips([$boleto, $boleto]);
 
         $this->assertNotNull($pdf->generateSlip($pdf::OUTPUT_STRING));
     }
@@ -113,7 +113,7 @@ class BoletoTest extends TestCase
         ]);
 
         $pdf = new Pdf();
-        $pdf->addBoletos([$boleto, $boleto]);
+        $pdf->addSlips([$boleto, $boleto]);
         $file2 = $pdf->generateSlip($pdf::OUTPUT_SAVE, $file);
 
         $this->assertEquals($file, $file2);
@@ -151,7 +151,7 @@ class BoletoTest extends TestCase
         ]);
 
         $pdf = new Pdf();
-        $pdf->addBoletos([$boleto, $boleto]);
+        $pdf->addSlips([$boleto, $boleto]);
         $file2 = $pdf->generateSlip($pdf::OUTPUT_SAVE, $file, true);
 
         $this->assertEquals($file, $file2);
@@ -191,8 +191,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoBB()
@@ -217,8 +217,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoBradesco()
@@ -245,8 +245,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoCaixa()
@@ -274,8 +274,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoHSBC()
@@ -303,8 +303,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoItau()
@@ -331,8 +331,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoSantander()
@@ -359,8 +359,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoSicredi()
@@ -388,8 +388,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoBancoob()
@@ -417,8 +417,8 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 
     public function testBoletoBnb()
@@ -445,7 +445,7 @@ class BoletoTest extends TestCase
             ]
         );
         $this->assertInternalType('array', $boleto->toArray());
-        $this->assertNotNull($boleto->renderHTML());
-        $this->assertNotNull($boleto->renderPDF());
+        $this->assertNotNull($boleto->getHTML());
+        $this->assertNotNull($boleto->getPDF());
     }
 }

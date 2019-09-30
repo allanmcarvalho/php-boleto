@@ -8,7 +8,6 @@ use Exception;
 use PhpBoleto\Interfaces\Person\PersonInterface;
 use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Persons\Person;
-use PhpBoleto\Slip\Render\Html;
 use PhpBoleto\Slip\Render\Pdf;
 use PhpBoleto\Tools\Util;
 use Psr\Http\Message\StreamInterface;
@@ -360,6 +359,62 @@ abstract class SlipAbstract implements SlipInterface
     public function getProtectedFields(): array
     {
         return $this->protectedFields;
+    }
+
+    /**
+     * Gera o Html do código de barras
+     * @return string
+     * @throws Exception
+     */
+    public function getBarCodeHtml(): string
+    {
+        $barCode = $this->getBarCode();
+        $barCode = (strlen($barCode) % 2 != 0 ? '0' : '') . $barCode;
+        $barcodes = ['00110', '10001', '01001', '11000', '00101', '10100', '01100', '00011', '10010', '01010'];
+        for ($f1 = 9; $f1 >= 0; $f1--) {
+            for ($f2 = 9; $f2 >= 0; $f2--) {
+                $f = ($f1 * 10) + $f2;
+                $text = "";
+                for ($i = 1; $i < 6; $i++) {
+                    $text .= substr($barcodes[$f1], ($i - 1), 1) . substr($barcodes[$f2], ($i - 1), 1);
+                }
+                $barcodes[$f] = $text;
+            }
+        }
+
+        // Guarda inicial
+        $return = '<div class="barcode">' .
+            '<div class="black thin"></div>' .
+            '<div class="white thin"></div>' .
+            '<div class="black thin"></div>' .
+            '<div class="white thin"></div>';
+
+        // Draw dos dados
+        while (strlen($barCode) > 0) {
+            $i = round(substr($barCode, 0, 2));
+            $barCode = substr($barCode, strlen($barCode) - (strlen($barCode) - 2), strlen($barCode) - 2);
+            $f = $barcodes[$i];
+            for ($i = 1; $i < 11; $i += 2) {
+                if (substr($f, ($i - 1), 1) == "0") {
+                    $f1 = 'thin';
+                } else {
+                    $f1 = 'large';
+                }
+                $return .= "<div class='black {$f1}'></div>";
+                if (substr($f, $i, 1) == "0") {
+                    $f2 = 'thin';
+                } else {
+                    $f2 = 'large';
+                }
+                $return .= "<div class='white {$f2}'></div>";
+            }
+        }
+
+        // Final
+        return $return . '<div class="black large"></div>' .
+            '<div class="white thin"></div>' .
+            '<div class="black thin"></div>' .
+            '</div>';
     }
 
     /**
@@ -765,7 +820,7 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @return int
      */
-    public function getControlNumber(): int
+    public function getControlNumber(): ?int
     {
         return $this->controlNumber;
     }
@@ -788,7 +843,7 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @return string
      */
-    public function getBankUsage(): string
+    public function getBankUsage(): ?string
     {
         return $this->bankUsage;
     }
@@ -956,6 +1011,16 @@ abstract class SlipAbstract implements SlipInterface
     }
 
     /**
+     * Retorna a moeda utilizada pelo boleto
+     *
+     * @return string
+     */
+    public function getCurrencySymbol(): string
+    {
+        return "R$";
+    }
+
+    /**
      * Define o objeto do pagador
      *
      * @param PersonInterface|array $payer
@@ -1035,6 +1100,16 @@ abstract class SlipAbstract implements SlipInterface
     public function getValue(): float
     {
         return round($this->value, 2);
+    }
+
+    /**
+     * Retorna o valor total do boleto (incluindo taxas)
+     *
+     * @return string
+     */
+    public function getFormattedValue(): string
+    {
+        return Util::numberInReal($this->getValue());
     }
 
     /**
@@ -1450,15 +1525,17 @@ abstract class SlipAbstract implements SlipInterface
      *
      * @param bool $print
      * @param bool $showInstructions
+     * @param bool $showReceipt
      * @return string
      * @throws Exception
      */
-    public function renderPDF(bool $print = false, bool $showInstructions = true)
+    public function getPDF(bool $print = false, bool $showInstructions = true, bool $showReceipt = false): string
     {
         $pdf = new Pdf();
-        $pdf->addBoleto($this);
-        if ($print) $pdf->showPrint();
-        if (!$showInstructions) $pdf->hideInstrucoes();
+        $pdf->addSlip($this);
+        $pdf->showPrint($print);
+        $pdf->showInstructions($showInstructions);
+        $pdf->showReceipt($showReceipt);
         return $pdf->generateSlip('S', null);
     }
 
@@ -1466,32 +1543,17 @@ abstract class SlipAbstract implements SlipInterface
      * Render PDF
      *
      * @param bool $showInstructions
+     * @param bool $showReceipt
      * @return StreamInterface
      * @throws Exception
      */
-    public function getStreamPDF(bool $showInstructions = true)
+    public function getStreamPDF(bool $showInstructions = true, bool $showReceipt = false): StreamInterface
     {
         $pdf = new Pdf();
-        $pdf->addBoleto($this);
-        if (!$showInstructions) $pdf->hideInstrucoes();
+        $pdf->addSlip($this);
+        $pdf->showInstructions($showInstructions);
+        $pdf->showReceipt($showReceipt);
         return $pdf->generateStreamSlip();
-    }
-
-    /**
-     * Render HTML
-     *
-     * @param bool $print
-     * @param bool $showInstructions
-     * @return string
-     * @throws Exception
-     */
-    public function renderHTML(bool $print = false, bool $showInstructions = true)
-    {
-        $html = new Html();
-        $html->addBoleto($this);
-        if ($print) $html->showPrint();
-        if (!$showInstructions) $html->hideInstrucoes();
-        return $html->gerarBoleto();
     }
 
     /**
@@ -1523,9 +1585,9 @@ abstract class SlipAbstract implements SlipInterface
     {
         return array_merge(
             [
-                'digitableLina' => $this->getDigitableLine(),
+                'digitableLine' => $this->getDigitableLine(),
                 'barCode' => $this->getBarCode(),
-                'beneficiary' => $this->getPayer()->toArray(),
+                'beneficiary' => $this->getBeneficiary()->toArray(),
                 'base64Logo' => $this->getBase64Logo(),
                 'logo' => $this->getLogo(),
                 'base64BankLogo' => $this->getBase64BankLogo(),
@@ -1542,7 +1604,7 @@ abstract class SlipAbstract implements SlipInterface
                 'interest' => Util::numberInReal($this->getInterest(), 2, false),
                 'chargeInterestAfter' => $this->getChargeInterestAfter(),
                 'protestAfter' => $this->getProtestAfter(),
-                'guarantor' => empty($this->getGuarantor()) ? $this->getGuarantor()->toArray() : [],
+                'guarantor' => !empty($this->getGuarantor()) ? $this->getGuarantor()->toArray() : [],
                 'payer' => $this->getPayer()->toArray(),
                 'demonstrative' => $this->getDemonstrative(),
                 'instructions' => $this->getInstructions(),

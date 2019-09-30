@@ -50,8 +50,8 @@ $boleto = new PhpBoleto\Slip\Banco\Bancoob(
 );
 
 $pdf = new PhpBoleto\Slip\Render\Pdf();
-$pdf->addBoleto($boleto);
-$pdf->hideInstrucoes();
+$pdf->addSlip($boleto);
+$pdf->showInstructions();
 $pdf->showReceipt();
 $pdf->generateSlip($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'bancoob.pdf');
 header('Content-type: application/pdf');

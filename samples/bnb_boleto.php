@@ -50,6 +50,6 @@ $boleto = new PhpBoleto\Slip\Banco\Bnb(
 );
 
 $pdf = new PhpBoleto\Slip\Render\Pdf();
-$pdf->addBoleto($boleto);
+$pdf->addSlip($boleto);
 
 $pdf->generateSlip($pdf::OUTPUT_SAVE, __DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'bnb.pdf');

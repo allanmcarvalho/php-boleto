@@ -29,14 +29,7 @@ interface SlipInterface
      *
      * @return mixed
      */
-    public function renderPDF(bool $print = false);
-
-    /**
-     * Render PDF.
-     *
-     * @return mixed
-     */
-    public function renderHTML();
+    public function getPDF(bool $print = false);
 
     /**
      * Return boleto as a Array.
@@ -187,7 +180,7 @@ interface SlipInterface
     /**
      * @return mixed
      */
-    public function getControlNumber(): int;
+    public function getControlNumber(): ?int;
 
     /**
      * @return mixed
@@ -233,7 +226,7 @@ interface SlipInterface
     /**
      * @return mixed
      */
-    public function getBankUsage(): string;
+    public function getBankUsage(): ?string;
 
     /**
      * @return mixed

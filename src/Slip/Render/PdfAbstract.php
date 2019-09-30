@@ -3,9 +3,10 @@
 namespace PhpBoleto\Slip\Render;
 
 
+use Exception;
 use FPDF;
 
-abstract class AbstractPdf extends FPDF
+abstract class PdfAbstract extends FPDF
 {
     // INCLUDE JS
     protected $javascript;
@@ -22,7 +23,7 @@ abstract class AbstractPdf extends FPDF
         $this->SetY(-20);
         $pageGroups = (is_array($this->PageGroups) ? count($this->PageGroups) : 0);
         if ($pageGroups) {
-            $this->Cell(0, 6, 'SlipInterface ' . $this->GroupPageNo() . '/' . $this->PageGroupAlias(), 0, 0, 'C');
+            // $this->Cell(0, 6, 'SlipInterface ' . $this->GroupPageNo() . '/' . $this->PageGroupAlias(), 0, 0, 'C');
         }
     }
 
@@ -86,7 +87,11 @@ abstract class AbstractPdf extends FPDF
         parent::_beginpage($orientation, $size, $rotation);
         if ($this->NewPageGroup) {
             // start a new group
-            $n = sizeof($this->PageGroups) + 1;
+            if (empty($this->PageGroups) and !is_array($this->PageGroups)) {
+                $n = 1;
+            } else {
+                $n = sizeof($this->PageGroups) + 1;
+            }
             $alias = '{' . $n . '}';
             $this->PageGroups[$alias] = 1;
             $this->CurrPageGroup = $alias;
@@ -146,6 +151,7 @@ abstract class AbstractPdf extends FPDF
      * @param $code
      * @param int $basewidth
      * @param int $height
+     * @throws Exception
      */
     public function i25($xpos, $ypos, $code, $basewidth = 1, $height = 10)
     {
@@ -210,10 +216,10 @@ abstract class AbstractPdf extends FPDF
     public function __construct($orientation = 'P', $unit = 'mm', $size = 'A4')
     {
         parent::__construct($orientation, $unit, $size);
-        $this->SetCreator($this->_('Intrasis Desenvolvimento de Sistemas'));
-        $this->SetAuthor($this->_('Intrasis Desenvolvimento de Sistemas'));
-        $this->SetSubject($this->_('Visualização gerada pelo Sismanager'));
-        $this->SetKeywords($this->_('Visualização visualização Visualizacao visualizacao sismanger Sismanger Intrasis intrasis'));
+        $this->SetCreator($this->_('WSS Software'));
+        $this->SetAuthor($this->_('Allan Carvalho'));
+        $this->SetSubject($this->_('Boleto bancário'));
+        $this->SetKeywords($this->_('Boleto bancário'));
         $this->AliasNbPages('{1}');
     }
 

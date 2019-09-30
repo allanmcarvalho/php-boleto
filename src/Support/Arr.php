@@ -3,7 +3,6 @@
 namespace PhpBoleto\Support;
 
 use ArrayAccess;
-use PhpBoleto\Collection;
 use PhpBoleto\Traits\Macroable;
 
 class Arr
@@ -133,7 +132,7 @@ class Arr
     /**
      * Determine if the given key exists in the provided array.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param ArrayAccess|array $array
      * @param  string|int  $key
      * @return bool
      */
@@ -263,7 +262,7 @@ class Arr
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param ArrayAccess|array $array
      * @param  string  $key
      * @param  mixed   $default
      * @return mixed
@@ -296,7 +295,7 @@ class Arr
     /**
      * Check if an item exists in an array using "dot" notation.
      *
-     * @param  \ArrayAccess|array  $array
+     * @param ArrayAccess|array $array
      * @param  string  $key
      * @return bool
      */
