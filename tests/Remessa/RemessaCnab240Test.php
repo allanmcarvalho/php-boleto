@@ -2,9 +2,10 @@
 
 namespace PhpBoleto\Tests\Remessa;
 
-use PhpBoleto\Slip\Banco as Boleto;
-use PhpBoleto\Cnab\Remessa\Cnab240\Banco as Remessa;
+use Carbon\Carbon;
+use PhpBoleto\Cnab\Remittances\Cnab240\Bank as Remessa;
 use PhpBoleto\Person;
+use PhpBoleto\Slip\Bank as Boleto;
 use PhpBoleto\Tests\TestCase;
 
 class RemessaCnab240Test extends TestCase
@@ -56,7 +57,7 @@ class RemessaCnab240Test extends TestCase
         $boleto = new Boleto\Santander(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '033.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,

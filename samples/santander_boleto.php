@@ -27,7 +27,7 @@ $pagador = new Person(
     ]
 );
 
-$boleto = new PhpBoleto\Slip\Banco\Santander(
+$boleto = new PhpBoleto\Slip\Bank\Santander(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '033.png',
         'dataVencimento' => new Carbon(),

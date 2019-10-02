@@ -2,9 +2,11 @@
 
 namespace PhpBoleto\Tests\Remessa;
 
-use PhpBoleto\Slip\Banco as Boleto;
-use PhpBoleto\Cnab\Remessa\Cnab400\Banco as Remessa;
+use Carbon\Carbon;
+use Exception;
+use PhpBoleto\Cnab\Remittances\Cnab400\Bank as Remessa;
 use PhpBoleto\Person;
+use PhpBoleto\Slip\Bank as Boleto;
 use PhpBoleto\Tests\TestCase;
 use PhpBoleto\Util;
 
@@ -54,7 +56,7 @@ class RemessaCnab400Test extends TestCase
     }
 
     /**
-     * @expectedException     \Exception
+     * @expectedException     Exception
      */
     public function testRemessaCamposInvalidos(){
         $remessa = new Remessa\Banrisul([
@@ -65,7 +67,7 @@ class RemessaCnab400Test extends TestCase
     }
 
     /**
-     * @expectedException     \Exception
+     * @expectedException     Exception
      */
     public function testRemessaCarteiraIndisponivel(){
         $remessa = new Remessa\Banrisul([
@@ -82,7 +84,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Banrisul(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '041.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -122,7 +124,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Banrisul(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '041.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -167,7 +169,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Bb(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '001.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -212,7 +214,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Bradesco(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '237.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -261,7 +263,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Caixa(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '104.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100.41,
                 'multa' => false,
                 'juros' => false,
@@ -310,7 +312,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Hsbc(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '399.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -358,7 +360,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Itau(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '341.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -405,7 +407,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Santander(
             [
                 'logo' => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '033.png',
-                'dataVencimento' => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor' => 100,
                 'multa' => false,
                 'juros' => false,
@@ -453,7 +455,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Sicredi(
             [
                 'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '748.png',
-                'dataVencimento'         => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor'                  => 100,
                 'multa'                  => false,
                 'juros'                  => false,
@@ -502,7 +504,7 @@ class RemessaCnab400Test extends TestCase
         $boleto = new Boleto\Bancoob(
             [
                 'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '748.png',
-                'dataVencimento'         => new \Carbon\Carbon(),
+                'dataVencimento' => new Carbon(),
                 'valor'                  => 100,
                 'multa'                  => false,
                 'juros'                  => false,

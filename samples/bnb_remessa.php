@@ -1,6 +1,11 @@
 <?php
+
+use Carbon\Carbon;
+use PhpBoleto\Cnab\Remittances\Cnab400\Bank\Bnb;
+use PhpBoleto\Person;
+
 require 'autoload.php';
-$beneficiario = new \PhpBoleto\Person(
+$beneficiario = new Person(
     [
         'nome'      => 'ACME',
         'endereco'  => 'Rua um, 123',
@@ -11,7 +16,7 @@ $beneficiario = new \PhpBoleto\Person(
     ]
 );
 
-$pagador = new \PhpBoleto\Person(
+$pagador = new Person(
     [
         'nome'      => 'Cliente',
         'endereco'  => 'Rua um, 123',
@@ -23,10 +28,10 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Slip\Banco\Bnb(
+$boleto = new PhpBoleto\Slip\Bank\Bnb(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '004.png',
-        'dataVencimento'         => \Carbon\Carbon::createFromDate(2017, 04, 03),
+        'dataVencimento' => Carbon::createFromDate(2017, 04, 03),
         'valor'                  => 2338.28,
         'multa'                  => 2.0,
         'juros'                  => false,
@@ -45,7 +50,7 @@ $boleto = new PhpBoleto\Slip\Banco\Bnb(
     ]
 );
 
-$remessa = new \PhpBoleto\Cnab\Remessa\Cnab400\Banco\Bnb(
+$remessa = new Bnb(
     [
         'agencia'      => '0232',
         'conta'        => '0000559',

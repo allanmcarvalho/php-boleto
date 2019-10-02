@@ -27,7 +27,7 @@ $pagador = new Person(
     ]
 );
 
-$boleto = new PhpBoleto\Slip\Banco\Bnb(
+$boleto = new PhpBoleto\Slip\Bank\Bnb(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '004.png',
         'dataVencimento' => Carbon::createFromDate(2017, 04, 03),

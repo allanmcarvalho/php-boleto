@@ -1,6 +1,11 @@
 <?php
+
+use Carbon\Carbon;
+use PhpBoleto\Cnab\Remittances\Cnab400\Bank\Hsbc;
+use PhpBoleto\Person;
+
 require 'autoload.php';
-$beneficiario = new \PhpBoleto\Person(
+$beneficiario = new Person(
     [
         'nome'      => 'ACME',
         'endereco'  => 'Rua um, 123',
@@ -11,7 +16,7 @@ $beneficiario = new \PhpBoleto\Person(
     ]
 );
 
-$pagador = new \PhpBoleto\Person(
+$pagador = new Person(
     [
         'nome'      => 'Cliente',
         'endereco'  => 'Rua um, 123',
@@ -23,10 +28,10 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Slip\Banco\Hsbc(
+$boleto = new PhpBoleto\Slip\Bank\Hsbc(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '399.png',
-        'dataVencimento'         => new \Carbon\Carbon(),
+        'dataVencimento' => new Carbon(),
         'valor'                  => 100,
         'multa'                  => false,
         'juros'                  => false,
@@ -46,7 +51,7 @@ $boleto = new PhpBoleto\Slip\Banco\Hsbc(
     ]
 );
 
-$remessa = new \PhpBoleto\Cnab\Remessa\Cnab400\Banco\Hsbc(
+$remessa = new Hsbc(
     [
         'agencia'      => 1111,
         'carteira'     => 'CSB',

@@ -27,7 +27,7 @@ $pagador = new Person(
     ]
 );
 
-$boleto = new PhpBoleto\Slip\Banco\Caixa(
+$boleto = new PhpBoleto\Slip\Bank\Caixa(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '104.png',
         'dataVencimento' => new Carbon(),

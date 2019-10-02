@@ -5,7 +5,7 @@ namespace PhpBoleto\Tests\Boleto;
 use Carbon\Carbon;
 use Exception;
 use PhpBoleto\Person;
-use PhpBoleto\Slip\Banco as Boleto;
+use PhpBoleto\Slip\Bank as Boleto;
 use PhpBoleto\Slip\Render\Pdf;
 use PhpBoleto\Tests\TestCase;
 

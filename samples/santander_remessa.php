@@ -1,6 +1,11 @@
 <?php
+
+use Carbon\Carbon;
+use PhpBoleto\Cnab\Remittances\Cnab400\Bank\Santander;
+use PhpBoleto\Person;
+
 require 'autoload.php';
-$beneficiario = new \PhpBoleto\Person(
+$beneficiario = new Person(
     [
         'nome'      => 'ACME',
         'endereco'  => 'Rua um, 123',
@@ -11,7 +16,7 @@ $beneficiario = new \PhpBoleto\Person(
     ]
 );
 
-$pagador = new \PhpBoleto\Person(
+$pagador = new Person(
     [
         'nome'      => 'Cliente',
         'endereco'  => 'Rua um, 123',
@@ -23,10 +28,10 @@ $pagador = new \PhpBoleto\Person(
     ]
 );
 
-$boleto = new PhpBoleto\Slip\Banco\Santander(
+$boleto = new PhpBoleto\Slip\Bank\Santander(
     [
         'logo'                   => realpath(__DIR__ . '/../logos/') . DIRECTORY_SEPARATOR . '033.png',
-        'dataVencimento'         => new \Carbon\Carbon(),
+        'dataVencimento' => new Carbon(),
         'valor'                  => 100,
         'multa'                  => false,
         'juros'                  => false,
@@ -45,7 +50,7 @@ $boleto = new PhpBoleto\Slip\Banco\Santander(
     ]
 );
 
-$remessa = new \PhpBoleto\Cnab\Remessa\Cnab400\Banco\Santander(
+$remessa = new Santander(
     [
         'agencia'       => 1111,
         'carteira'      => 101,

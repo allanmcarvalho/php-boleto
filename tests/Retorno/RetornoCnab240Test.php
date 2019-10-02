@@ -2,18 +2,19 @@
 
 namespace PhpBoleto\Tests\Retorno;
 
-use PhpBoleto\Cnab\Retorno\Cnab240\Detalhe;
-use PhpBoleto\Cnab\Retorno\Cnab240\DetalheSegmentoT;
-use PhpBoleto\Cnab\Retorno\Cnab240\DetalheSegmentoU;
-use PhpBoleto\Cnab\Retorno\Cnab240\DetalheSegmentoY;
-use PhpBoleto\Tests\TestCase;
 use Illuminate\Support\Collection;
+use PhpBoleto\Cnab\Returns\Cnab240\Detalhe;
+use PhpBoleto\Cnab\Returns\Cnab240\DetalheSegmentoT;
+use PhpBoleto\Cnab\Returns\Cnab240\DetalheSegmentoU;
+use PhpBoleto\Cnab\Returns\Cnab240\DetalheSegmentoY;
+use PhpBoleto\Cnab\Returns\Factory;
+use PhpBoleto\Tests\TestCase;
 
 class RetornoCnab240Test extends TestCase
 {
     public function testRetornoSantanderCnab240()
     {
-        $retorno = \PhpBoleto\Cnab\Retorno\Factory::make(__DIR__ . '/files/cnab240/santander.ret');
+        $retorno = Factory::make(__DIR__ . '/files/cnab240/santander.ret');
         $retorno->processar();
 
         $this->assertNotNull($retorno->getHeader());
