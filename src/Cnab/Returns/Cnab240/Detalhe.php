@@ -4,7 +4,7 @@ namespace PhpBoleto\Cnab\Returns\Cnab240;
 
 use Carbon\Carbon;
 use Exception;
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\Detalhe as DetalheContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\DetailInterface as DetalheContract;
 use PhpBoleto\Interfaces\PersonInterface as PessoaContract;
 use PhpBoleto\Traits\MagicTrait;
 use PhpBoleto\Util;
@@ -116,7 +116,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getOcorrencia()
+    public function getOccurrence()
     {
         return $this->ocorrencia;
     }
@@ -124,11 +124,11 @@ class Detalhe implements DetalheContract
     /**
      * @return boolean
      */
-    public function hasOcorrencia()
+    public function hasOccurrence()
     {
         $ocorrencias = func_get_args();
 
-        if (count($ocorrencias) == 0 && !empty($this->getOcorrencia())) {
+        if (count($ocorrencias) == 0 && !empty($this->getOccurrence())) {
             return true;
         }
 
@@ -136,7 +136,7 @@ class Detalhe implements DetalheContract
             $ocorrencias = func_get_arg(0);
         }
 
-        if (in_array($this->getOcorrencia(), $ocorrencias)) {
+        if (in_array($this->getOccurrence(), $ocorrencias)) {
             return true;
         }
 
@@ -158,7 +158,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getOcorrenciaTipo()
+    public function getOccurrenceType()
     {
         return $this->ocorrenciaTipo;
     }
@@ -178,7 +178,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getOcorrenciaDescricao()
+    public function getOccurrenceDescription()
     {
         return $this->ocorrenciaDescricao;
     }
@@ -218,7 +218,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getNumeroDocumento()
+    public function getDocumentNumber()
     {
         return $this->numeroDocumento;
     }
@@ -238,7 +238,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getNossoNumero()
+    public function getOurNumber()
     {
         return $this->nossoNumero;
     }
@@ -280,7 +280,7 @@ class Detalhe implements DetalheContract
      *
      * @return Carbon|null|string
      */
-    public function getDataVencimento($format = 'd/m/Y')
+    public function getDueDate($format = 'd/m/Y')
     {
         return $this->dataVencimento instanceof Carbon
             ? $format === false ? $this->dataVencimento : $this->dataVencimento->format($format)
@@ -306,7 +306,7 @@ class Detalhe implements DetalheContract
      *
      * @return Carbon|null|string
      */
-    public function getDataCredito($format = 'd/m/Y')
+    public function getCreditDate($format = 'd/m/Y')
     {
         return $this->dataCredito instanceof Carbon
             ? $format === false ? $this->dataCredito : $this->dataCredito->format($format)
@@ -332,7 +332,7 @@ class Detalhe implements DetalheContract
      *
      * @return Carbon|null|string
      */
-    public function getDataOcorrencia($format = 'd/m/Y')
+    public function getOccurrenceDate($format = 'd/m/Y')
     {
         return $this->dataOcorrencia instanceof Carbon
             ? $format === false ? $this->dataOcorrencia : $this->dataOcorrencia->format($format)
@@ -356,7 +356,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValor()
+    public function getValue()
     {
         return $this->valor;
     }
@@ -376,7 +376,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValorIOF()
+    public function getIOFValue()
     {
         return $this->valorIOF;
     }
@@ -396,7 +396,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValorAbatimento()
+    public function getAbatementValue()
     {
         return $this->valorAbatimento;
     }
@@ -416,7 +416,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValorDesconto()
+    public function getDiscountValue()
     {
         return $this->valorDesconto;
     }
@@ -436,7 +436,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValorMora()
+    public function getInterestValue()
     {
         return $this->valorMora;
     }
@@ -456,7 +456,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValorMulta()
+    public function getFineValue()
     {
         return $this->valorMulta;
     }
@@ -476,7 +476,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValorRecebido()
+    public function getReceivedValue()
     {
         return $this->valorRecebido;
     }
@@ -496,7 +496,7 @@ class Detalhe implements DetalheContract
     /**
      * @return string
      */
-    public function getValorTarifa()
+    public function getFareValue()
     {
         return $this->valorTarifa;
     }
@@ -540,7 +540,7 @@ class Detalhe implements DetalheContract
      */
     public function hasError()
     {
-        return $this->getOcorrencia() == self::OCORRENCIA_ERRO;
+        return $this->getOccurrence() == self::OCORRENCIA_ERRO;
     }
 
     /**

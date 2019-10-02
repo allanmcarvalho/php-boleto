@@ -3,13 +3,13 @@
 namespace PhpBoleto\Cnab\Remittances\Cnab240;
 
 use Exception;
-use PhpBoleto\Cnab\Remittances\AbstractRemessa as AbstractRemessaGeneric;
+use PhpBoleto\Cnab\Remittances\GenericRemittanceAbstract;
 
 /**
- * Class AbstractRemessa
+ * Class GenericRemittanceAbstract
  * @package PhpBoleto\CnabInterface\Remessa\Cnab240
  */
-abstract class AbstractRemessa extends AbstractRemessaGeneric
+abstract class RemittanceAbstract extends GenericRemittanceAbstract
 {
     /**
      * @var int
@@ -21,7 +21,7 @@ abstract class AbstractRemessa extends AbstractRemessaGeneric
      *
      * @var array
      */
-    protected $aRegistros = [
+    protected $registryArray = [
         self::HEADER => [],
         self::HEADER_LOTE => [],
         self::DETALHE => [],
@@ -51,7 +51,7 @@ abstract class AbstractRemessa extends AbstractRemessaGeneric
      */
     protected function getHeaderLote()
     {
-        return $this->aRegistros[self::HEADER_LOTE];
+        return $this->registryArray[self::HEADER_LOTE];
     }
 
     /**
@@ -61,53 +61,53 @@ abstract class AbstractRemessa extends AbstractRemessaGeneric
      */
     protected function getTrailerLote()
     {
-        return $this->aRegistros[self::TRAILER_LOTE];
+        return $this->registryArray[self::TRAILER_LOTE];
     }
 
     /**
      * Inicia a edição do header
      */
-    protected function iniciaHeader()
+    protected function initiateHeader()
     {
-        $this->aRegistros[self::HEADER] = array_fill(0, 240, ' ');
-        $this->atual = &$this->aRegistros[self::HEADER];
+        $this->registryArray[self::HEADER] = array_fill(0, 240, ' ');
+        $this->linePointer = &$this->registryArray[self::HEADER];
     }
 
     /**
      * Inicia a edição do header
      */
-    protected function iniciaHeaderLote()
+    protected function initiateHeaderLot()
     {
-        $this->aRegistros[self::HEADER_LOTE] = array_fill(0, 240, ' ');
-        $this->atual = &$this->aRegistros[self::HEADER_LOTE];
+        $this->registryArray[self::HEADER_LOTE] = array_fill(0, 240, ' ');
+        $this->linePointer = &$this->registryArray[self::HEADER_LOTE];
     }
 
     /**
      * Inicia a edição do trailer (footer).
      */
-    protected function iniciaTrailerLote()
+    protected function initiateTrailerLot()
     {
-        $this->aRegistros[self::TRAILER_LOTE] = array_fill(0, 240, ' ');
-        $this->atual = &$this->aRegistros[self::TRAILER_LOTE];
+        $this->registryArray[self::TRAILER_LOTE] = array_fill(0, 240, ' ');
+        $this->linePointer = &$this->registryArray[self::TRAILER_LOTE];
     }
 
     /**
      * Inicia a edição do trailer (footer).
      */
-    protected function iniciaTrailer()
+    protected function initiateTrailer()
     {
-        $this->aRegistros[self::TRAILER] = array_fill(0, 240, ' ');
-        $this->atual = &$this->aRegistros[self::TRAILER];
+        $this->registryArray[self::TRAILER] = array_fill(0, 240, ' ');
+        $this->linePointer = &$this->registryArray[self::TRAILER];
     }
 
     /**
      * Inicia uma nova linha de detalhe e marca com a atual de edição
      */
-    protected function iniciaDetalhe()
+    protected function initiateDetail()
     {
-        $this->iRegistros++;
-        $this->aRegistros[self::DETALHE][$this->iRegistros] = array_fill(0, 240, ' ');
-        $this->atual = &$this->aRegistros[self::DETALHE][$this->iRegistros];
+        $this->registryCount++;
+        $this->registryArray[self::DETALHE][$this->registryCount] = array_fill(0, 240, ' ');
+        $this->linePointer = &$this->registryArray[self::DETALHE][$this->registryCount];
     }
 
     /**
@@ -116,32 +116,32 @@ abstract class AbstractRemessa extends AbstractRemessaGeneric
      * @return string
      * @throws Exception
      */
-    public function gerar()
+    public function generate()
     {
         if (!$this->isValid()) {
             throw new Exception('Campos requeridos pelo banco, aparentam estar ausentes');
         }
 
         $stringRemessa = '';
-        if ($this->iRegistros < 1) {
+        if ($this->registryCount < 1) {
             throw new Exception('Nenhuma linha detalhe foi adicionada');
         }
 
         $this->header();
-        $stringRemessa .= $this->valida($this->getHeader()) . $this->fimLinha;
+        $stringRemessa .= $this->validate($this->getHeader()) . $this->eolChar;
 
         $this->headerLote();
-        $stringRemessa .= $this->valida($this->getHeaderLote()) . $this->fimLinha;
+        $stringRemessa .= $this->validate($this->getHeaderLote()) . $this->eolChar;
 
-        foreach ($this->getDetalhes() as $i => $detalhe) {
-            $stringRemessa .= $this->valida($detalhe) . $this->fimLinha;
+        foreach ($this->getDetails() as $i => $detalhe) {
+            $stringRemessa .= $this->validate($detalhe) . $this->eolChar;
         }
 
         $this->trailerLote();
-        $stringRemessa .= $this->valida($this->getTrailerLote()) . $this->fimLinha;
+        $stringRemessa .= $this->validate($this->getTrailerLote()) . $this->eolChar;
 
         $this->trailer();
-        $stringRemessa .= $this->valida($this->getTrailer()) . $this->fimArquivo;
+        $stringRemessa .= $this->validate($this->getTrailer()) . $this->endOfFileChar;
 
         return $stringRemessa;
     }

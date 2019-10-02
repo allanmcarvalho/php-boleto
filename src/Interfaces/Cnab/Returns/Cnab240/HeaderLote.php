@@ -1,92 +1,92 @@
 <?php
 
-namespace PhpBoleto\Interfaces\Cnab\Retorno\Cnab240;
+namespace PhpBoleto\Interfaces\Cnab\Returns\Cnab240;
 
 interface HeaderLote
 {
     /**
      * @return mixed
      */
-    public function getTipoRegistro();
+    public function getRegistryType();
 
     /**
      * @return mixed
      */
-    public function getTipoOperacao();
+    public function getOperationType();
 
     /**
      * @return mixed
      */
-    public function getTipoServico();
+    public function getServiceType();
 
     /**
      * @return mixed
      */
-    public function getVersaoLayoutLote();
+    public function getLayoutFileVersion();
 
     /**
      * @return mixed
      */
-    public function getTipoInscricao();
+    public function getSubscriptionType();
 
     /**
      * @return mixed
      */
-    public function getNumeroInscricao();
+    public function getSubscriptionNumber();
 
     /**
      * @return mixed
      */
-    public function getCodigoCedente();
+    public function getAssignorCode();
 
     /**
      * @return mixed
      */
-    public function getConvenio();
+    public function getCovenant();
 
     /**
      * @return mixed
      */
-    public function getNomeEmpresa();
+    public function getCompanySocialName();
 
     /**
      * @return mixed
      */
-    public function getAgencia();
+    public function getAgency();
 
     /**
      * @return mixed
      */
-    public function getAgenciaDv();
+    public function getAgencyCheckDigit();
 
     /**
      * @return mixed
      */
-    public function getConta();
+    public function getAccount();
 
     /**
      * @return string
      */
-    public function getNumeroRetorno();
+    public function getReturnNumber();
 
     /**
      * @return mixed
      */
-    public function getContaDv();
+    public function getAccountCheckDigit();
 
     /**
      * @param string $format
      *
      * @return string
      */
-    public function getDataGravacao($format = 'd/m/Y');
+    public function getWritingDate($format = 'd/m/Y');
 
     /**
      * @param string $format
      *
      * @return string
      */
-    public function getDataCredito($format = 'd/m/Y');
+    public function getCreditDate($format = 'd/m/Y');
 
     /**
      * @return array

@@ -3,17 +3,17 @@
 namespace PhpBoleto\Cnab\Remittances\Cnab240\Bank;
 
 use Exception;
-use PhpBoleto\CalculoDV;
-use PhpBoleto\Cnab\Remittances\Cnab240\AbstractRemessa;
-use PhpBoleto\Interfaces\Cnab\Remessa as RemessaContract;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Cnab\Remittances\Cnab240\RemittanceAbstract;
+use PhpBoleto\Interfaces\Cnab\RemittanceInterface;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
+use PhpBoleto\Tools\CheckDigitCalculation;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Bancoob
  * @package PhpBoleto\CnabInterface\Remessa\Cnab240\Banco
  */
-class Bancoob extends AbstractRemessa implements RemessaContract
+class Bancoob extends RemittanceAbstract implements RemittanceInterface
 {
     const ESPECIE_DUPLICATA = '01';
     const ESPECIE_NOTA_PROMISSORIA = '02';
@@ -52,7 +52,7 @@ class Bancoob extends AbstractRemessa implements RemessaContract
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->addCampoObrigatorio('convenio');
+        $this->addRequiredField('covenant');
     }
 
     /**
@@ -60,145 +60,146 @@ class Bancoob extends AbstractRemessa implements RemessaContract
      *
      * @var string
      */
-    protected $codigoBanco = BoletoContract::BANK_CODE_BANCOOB;
+    protected $bankCode = SlipInterface::BANK_CODE_BANCOOB;
 
     /**
-     * Valor Total dos Titulos
+     * Valor Total dos Títulos
      *
-     * @var numeric
+     * @var float
      */
-    protected $valorTotalTitulos = 0;
+    protected $titleTotalAmount = 0;
 
     /**
      * Define as carteiras disponíveis para cada banco
      *
      * @var array
      */
-    protected $carteiras = [1];
+    protected $wallets = [1];
 
     /**
      * Caracter de fim de linha
      *
      * @var string
      */
-    protected $fimLinha = "\r\n";
+    protected $eolChar = "\r\n";
 
     /**
      * Caracter de fim de arquivo
      *
      * @var null
      */
-    protected $fimArquivo = "";
+    protected $endOfFileChar = "";
 
     /**
      * Convenio com o banco
      *
      * @var string
      */
-    protected $convenio;
+    protected $covenant;
 
     /**
-     * Sequencia Segmento
+     * Sequência Segmento
      *
      * @var string
      */
-    protected $sequenciaSegmento = 0;
+    protected $followingSequence = 0;
 
     /**
      * Quantidade de registros do lote.
      */
-    private $qtyRegistrosLote;
+    private $RegistryLotAmount;
 
     /**
      * @return mixed
      */
-    public function getConvenio()
+    public function getCovenant()
     {
-        return $this->convenio;
+        return $this->covenant;
     }
 
     /**
-     * @param mixed $convenio
+     * @param mixed $covenant
      *
      * @return Bancoob
      */
-    public function setConvenio($convenio)
+    public function setCovenant($covenant)
     {
-        $this->convenio = ltrim($convenio, 0);
+        $this->covenant = ltrim($covenant, 0);
 
         return $this;
     }
 
     /**
-     * Codigo do cliente junto ao banco.
+     * Código do cliente junto ao banco.
      *
      * @var string
      */
-    protected $codigoCliente;
+    protected $clientCode;
 
     /**
      * Retorna o codigo do cliente.
      *
      * @return string
      */
-    public function getCodigoCliente()
+    public function getClientCode()
     {
-        return $this->codigoCliente;
+        return $this->clientCode;
     }
 
     /**
-     * Seta o codigo do cliente.
+     * Seta o código do cliente.
      *
-     * @param  mixed $codigoCliente
-     * @return Santander
+     * @param mixed $clientCode
+     * @return Bancoob
      */
-    public function setCodigoCliente($codigoCliente)
+    public function setClientCode($clientCode)
     {
-        $this->codigoCliente = $codigoCliente;
+        $this->clientCode = $clientCode;
 
         return $this;
     }
 
     /**
-     * Retorna o codigo de transmissão.
+     * Retorna o código de transmissão.
      *
      * @return string
      * @throws Exception
      */
-    public function getCodigoTransmissao()
+    public function getStreamingCode()
     {
-        return Util::formatCnab('9', $this->getAgencia(), 5)
-            . CalculoDv::bancoobAgencia($this->getAgencia())
-            . Util::formatCnab('9', $this->getConta(), 12)
-            . Util::formatCnab('9', $this->getContaDv(), 1);
+        return Util::formatCnab('9', $this->getAgency(), 5)
+            . CheckDigitCalculation::banrisulAgency($this->getAgency())
+            . Util::formatCnab('9', $this->getAccount(), 12)
+            . Util::formatCnab('9', $this->getAccountCheckDigit(), 1);
     }
 
     /**
      * @return $this
+     * @throws Exception
      */
     protected function header()
     {
-        $this->iniciaHeader();
+        $this->initiateHeader();
 
-        $this->add(1, 3, $this->getCodigoBanco());
+        $this->add(1, 3, $this->getBankCode());
         $this->add(4, 7, '0000');
         $this->add(8, 8, '0');
         $this->add(9, 17, '');
-        $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiario()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição da empresa
-        $this->add(19, 32, Util::formatCnab('9L', $this->getBeneficiario()->getNameAndDocument(), 14));
+        $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiary()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição da empresa
+        $this->add(19, 32, Util::formatCnab('9L', $this->getBeneficiary()->getNameAndDocument(), 14));
         $this->add(33, 52, '');
-        $this->add(53, 57, Util::formatCnab('9', $this->getAgencia(), 5));
-        $this->add(58, 58, CalculoDv::bancoobAgencia($this->getAgencia()));
-        $this->add(59, 70, Util::formatCnab('9', $this->getConta(), 12));
-        $this->add(71, 71, Util::formatCnab('9', $this->getContaDv(), 1));
+        $this->add(53, 57, Util::formatCnab('9', $this->getAgency(), 5));
+        $this->add(58, 58, CheckDigitCalculation::banrisulAgency($this->getAgency()));
+        $this->add(59, 70, Util::formatCnab('9', $this->getAccount(), 12));
+        $this->add(71, 71, Util::formatCnab('9', $this->getAccountCheckDigit(), 1));
         $this->add(72, 72, '0');
-        $this->add(73, 102, Util::formatCnab('X', $this->getBeneficiario()->getName(), 30));
+        $this->add(73, 102, Util::formatCnab('X', $this->getBeneficiary()->getName(), 30));
         $this->add(103, 132, 'SICOOB');
         $this->add(133, 142, '');
         $this->add(143, 143, '1');
         $this->add(144, 151, date('dmY'));
         $this->add(152, 157, date('His'));
-        $this->add(158, 163, Util::formatCnab('9', $this->getIdremessa(), 6));
+        $this->add(158, 163, Util::formatCnab('9', $this->getRemittanceId(), 6));
         $this->add(164, 166, '081');
         $this->add(167, 171, '00000');
         $this->add(172, 191, '');
@@ -208,60 +209,60 @@ class Bancoob extends AbstractRemessa implements RemessaContract
         return $this;
     }
 
-    public function addBoleto(BoletoContract $boleto, $nSequencialLote = null)
+    public function addSlip(SlipInterface $slip, $nSequentialLote = null)
     {
 
-        $this->sequenciaSegmento++;
-        $this->segmentoP($nSequencialLote + $nSequencialLote + $this->sequenciaSegmento, $boleto);
-        $this->sequenciaSegmento++;
-        $this->segmentoQ($nSequencialLote + $nSequencialLote + $this->sequenciaSegmento, $boleto);
-        $this->sequenciaSegmento++;
-        $this->segmentoR($nSequencialLote + $nSequencialLote + $this->sequenciaSegmento, $boleto);
-        $this->sequenciaSegmento++;
-        $this->segmentoS($nSequencialLote + $nSequencialLote + $this->sequenciaSegmento, $boleto);
+        $this->followingSequence++;
+        $this->segmentP($nSequentialLote + $nSequentialLote + $this->followingSequence, $slip);
+        $this->followingSequence++;
+        $this->segmentoQ($nSequentialLote + $nSequentialLote + $this->followingSequence, $slip);
+        $this->followingSequence++;
+        $this->segmentoR($nSequentialLote + $nSequentialLote + $this->followingSequence, $slip);
+        $this->followingSequence++;
+        $this->segmentS($nSequentialLote + $nSequentialLote + $this->followingSequence, $slip);
 
         return $this;
     }
 
     /**
-     * @param integer $nSequencialLote
-     * @param BoletoContract $boleto
+     * @param integer $nSequentialLot
+     * @param SlipInterface $slip
      *
      * @return $this
      * @throws Exception
      */
-    protected function segmentoP($nSequencialLote, BoletoContract $boleto)
+    protected function segmentP($nSequentialLot, SlipInterface $slip)
     {
-        $this->iniciaDetalhe();
-        $this->add(1, 3, Util::onlyNumbers($this->getCodigoBanco())); //Código do Banco
+        $this->initiateDetail();
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
-        $this->add(9, 13, Util::formatCnab(9, $nSequencialLote, 5)); // Nº sequencial do registro de lote
+        $this->add(9, 13, Util::formatCnab(9, $nSequentialLot, 5)); // Nº sequencial do registro de lote
         $this->add(14, 14, Util::formatCnab('9', 'P', 1)); // Nº sequencial do registro de lote
         $this->add(15, 15, ''); // Reservado (Uso Banco)
         $this->add(16, 17, '01'); // Código de movimento remessa
-        $this->add(18, 22, Util::formatCnab(9, $this->getAgencia(), 5)); // Agência do cedente
+        $this->add(18, 22, Util::formatCnab(9, $this->getAgency(), 5)); // Agência do cedente
         $this->add(23, 23, Util::formatCnab(9, '', 1)); // Digito verificador da Agência do cedente
-        $this->add(24, 35, Util::formatCnab(9, $this->getConta(), 12)); // Numero da conta corrente
-        $this->add(36, 36, Util::formatCnab('9', $this->getContaDv(), 1));
+        $this->add(24, 35, Util::formatCnab(9, $this->getAccount(), 12)); // Numero da conta corrente
+        $this->add(36, 36, Util::formatCnab('9', $this->getAccountCheckDigit(), 1));
         $this->add(37, 37, ''); // Reservado (Uso Banco)
 
-        $this->add(38, 47, Util::formatCnab(9, $boleto->getOurNumber(), 10));
-        $this->add(48, 49, Util::formatCnab(9, $boleto->getQuota(), 2));
+        $this->add(38, 47, Util::formatCnab(9, $slip->getOurNumber(), 10));
+        $this->add(48, 49, Util::formatCnab(9, $slip->getQuota(), 2));
         $this->add(50, 51, '01');
         $this->add(52, 52, '1');
         $this->add(53, 57, '');
 
-        $this->add(58, 58, $this->getCarteira()); // Tipo de Cobrança
+        $this->add(58, 58, $this->getWallet()); // Tipo de Cobrança
 
         $this->add(59, 59, '0'); // Forma de Cadastramento
         $this->add(60, 60, ''); // Tipo de documento
         $this->add(61, 61, '2'); // Reservado (Uso Banco)
         $this->add(62, 62, '2'); // Reservado (Uso Banco)
         //
-        $this->add(63, 77, Util::formatCnab('X', $boleto->getDocumentNumber(), 15)); // Seu Número
-        $this->add(78, 85, $boleto->getDueDate()->format('dmY')); // Data de vencimento do título
-        $this->add(86, 100, Util::formatCnab(9, $boleto->getValue(), 15, 2)); // Valor nominal do título
+        $this->add(63, 77, Util::formatCnab('X', $slip->getDocumentNumber(), 15)); // Seu Número
+        $this->add(78, 85, $slip->getDueDate()->format('dmY')); // Data de vencimento do título
+        $this->add(86, 100, Util::formatCnab(9, $slip->getValue(), 15, 2)); // Valor nominal do título
         $this->add(101, 105, Util::formatCnab(9, 0, 5)); //Agência encarregada da cobrança
         $this->add(106, 106, '');
         $this->add(107, 108, '02'); //Espécie do título
@@ -269,18 +270,18 @@ class Bancoob extends AbstractRemessa implements RemessaContract
         $this->add(110, 117, date('dmY')); //Data da emissão do título
 
         $juros = 0;
-        if ($boleto->getInterest() > 0) {
-            $juros = Util::percent($boleto->getValue(), $boleto->getInterest()) / 30;
+        if ($slip->getInterest() > 0) {
+            $juros = Util::percent($slip->getValue(), $slip->getInterest()) / 30;
         }
         $this->add(118, 118, 1); //Código do juros de mora - 1 = Valor fixo ate a data informada – Informar o valor no campo “valor de desconto a ser concedido”.
-        $this->add(119, 126, Util::formatCnab(9, $boleto->getDueDate()->format('dmY'), 8)); //Data do juros de mora / data de vencimento do titulo
+        $this->add(119, 126, Util::formatCnab(9, $slip->getDueDate()->format('dmY'), 8)); //Data do juros de mora / data de vencimento do titulo
         $this->add(127, 141, Util::formatCnab(9, $juros, 15, 2)); //Valor da mora/dia ou Taxa mensal
         $this->add(142, 142, '0');
         $this->add(143, 150, '00000000');
-        $this->add(151, 165, Util::formatCnab(9, $boleto->getDiscount(), 15, 2)); //Valor ou Percentual do desconto concedido //TODO
+        $this->add(151, 165, Util::formatCnab(9, $slip->getDiscount(), 15, 2)); //Valor ou Percentual do desconto concedido //TODO
         $this->add(166, 180, Util::formatCnab(9, 0, 15, 2)); //Valor do IOF a ser recolhido
         $this->add(181, 195, Util::formatCnab(9, 0, 15, 2)); //Valor do abatimento
-        $this->add(196, 220, Util::formatCnab('X', $boleto->getDocumentNumber(), 25)); //Identificação do título na empresa
+        $this->add(196, 220, Util::formatCnab('X', $slip->getDocumentNumber(), 25)); //Identificação do título na empresa
         $this->add(221, 221, Util::formatCnab(9, 1, 1)); //Código para protesto
         $this->add(222, 223, Util::formatCnab(9, 0, 2)); //Número de dias para protesto
         $this->add(224, 224, Util::formatCnab(9, 0, 1)); //Código para Baixa/Devolução
@@ -289,41 +290,42 @@ class Bancoob extends AbstractRemessa implements RemessaContract
         $this->add(230, 239, '0000000000');
         $this->add(240, 240, ''); // Reservado (Uso Banco)
 
-        $this->valorTotalTitulos += $boleto->getValue();
+        $this->titleTotalAmount += $slip->getValue();
 
         return $this;
     }
 
     /**
-     * @param integer $nSequencialLote
-     * @param BoletoContract $boleto
+     * @param integer $nSequentialLot
+     * @param SlipInterface $slip
      *
+     * @return Bancoob
      * @throws Exception
      */
-    public function segmentoQ($nSequencialLote, BoletoContract $boleto)
+    public function segmentoQ($nSequentialLot, SlipInterface $slip)
     {
-        $this->qtyRegistrosLote = $nSequencialLote;
-        $this->iniciaDetalhe();
+        $this->RegistryLotAmount = $nSequentialLot;
+        $this->initiateDetail();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getCodigoBanco())); //Código do Banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
-        $this->add(9, 13, Util::formatCnab(9, $nSequencialLote, 5)); // Nº sequencial do registro de lote
+        $this->add(9, 13, Util::formatCnab(9, $nSequentialLot, 5)); // Nº sequencial do registro de lote
         $this->add(14, 14, Util::formatCnab('9', 'Q', 1)); // Nº sequencial do registro de lote
         $this->add(15, 15, ''); // Reservado (Uso Banco)
         $this->add(16, 17, '01'); // Código de movimento remessa
-        $this->add(18, 18, strlen(Util::onlyNumbers($boleto->getPayer()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição do sacado
-        $this->add(19, 33, Util::formatCnab(9, Util::onlyNumbers($boleto->getPayer()->getDocument()), 15)); // Número de inscrição do sacado
-        $this->add(34, 73, Util::formatCnab('X', $boleto->getPayer()->getName(), 40)); // Nome do pagador/Sacado
-        $this->add(74, 113, Util::formatCnab('X', $boleto->getPayer()->getAddress(), 40)); // Endereço do pagador/Sacado
-        $this->add(114, 128, Util::formatCnab('X', $boleto->getPayer()->getAddressDistrict(), 15)); // Bairro do pagador/Sacado
-        $this->add(129, 133, Util::formatCnab(9, Util::onlyNumbers($boleto->getPayer()->getPostalCode()), 5)); // CEP do pagador/Sacado
-        $this->add(134, 136, Util::formatCnab(9, Util::onlyNumbers(substr($boleto->getPayer()->getPostalCode(), 6, 9)), 3)); //SUFIXO do cep do pagador/Sacado
-        $this->add(137, 151, Util::formatCnab('X', $boleto->getPayer()->getCity(), 15)); // cidade do sacado
-        $this->add(152, 153, Util::formatCnab('X', $boleto->getPayer()->getStateUf(), 2)); // Uf do sacado
-        $this->add(154, 154, strlen(Util::onlyNumbers($boleto->getPayer()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição do sacado
-        $this->add(155, 169, Util::formatCnab(9, Util::onlyNumbers($boleto->getPayer()->getDocument()), 15)); // Tipo de inscrição do sacado
-        $this->add(170, 209, Util::formatCnab('X', $boleto->getPayer()->getName(), 40)); // Nome do Sacador
+        $this->add(18, 18, strlen(Util::onlyNumbers($slip->getPayer()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição do sacado
+        $this->add(19, 33, Util::formatCnab(9, Util::onlyNumbers($slip->getPayer()->getDocument()), 15)); // Número de inscrição do sacado
+        $this->add(34, 73, Util::formatCnab('X', $slip->getPayer()->getName(), 40)); // Nome do pagador/Sacado
+        $this->add(74, 113, Util::formatCnab('X', $slip->getPayer()->getAddress(), 40)); // Endereço do pagador/Sacado
+        $this->add(114, 128, Util::formatCnab('X', $slip->getPayer()->getAddressDistrict(), 15)); // Bairro do pagador/Sacado
+        $this->add(129, 133, Util::formatCnab(9, Util::onlyNumbers($slip->getPayer()->getPostalCode()), 5)); // CEP do pagador/Sacado
+        $this->add(134, 136, Util::formatCnab(9, Util::onlyNumbers(substr($slip->getPayer()->getPostalCode(), 6, 9)), 3)); //SUFIXO do cep do pagador/Sacado
+        $this->add(137, 151, Util::formatCnab('X', $slip->getPayer()->getCity(), 15)); // cidade do sacado
+        $this->add(152, 153, Util::formatCnab('X', $slip->getPayer()->getStateUf(), 2)); // Uf do sacado
+        $this->add(154, 154, strlen(Util::onlyNumbers($slip->getPayer()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição do sacado
+        $this->add(155, 169, Util::formatCnab(9, Util::onlyNumbers($slip->getPayer()->getDocument()), 15)); // Tipo de inscrição do sacado
+        $this->add(170, 209, Util::formatCnab('X', $slip->getPayer()->getName(), 40)); // Nome do Sacador
         $this->add(210, 212, '000'); // Identificador de carne 000 - Não possui, 001 - Possui Carné
         $this->add(213, 232, '');
         $this->add(233, 240, '');
@@ -333,16 +335,17 @@ class Bancoob extends AbstractRemessa implements RemessaContract
 
     /**
      * @param integer $nSequencialLote
-     * @param BoletoContract $boleto
+     * @param SlipInterface $slip
      *
+     * @return Bancoob
      * @throws Exception
      */
-    public function segmentoR($nSequencialLote, BoletoContract $boleto)
+    public function segmentoR($nSequencialLote, SlipInterface $slip)
     {
-        $this->qtyRegistrosLote = $nSequencialLote;
-        $this->iniciaDetalhe();
+        $this->RegistryLotAmount = $nSequencialLote;
+        $this->initiateDetail();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getCodigoBanco())); //Código do Banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
         $this->add(9, 13, Util::formatCnab(9, $nSequencialLote, 5)); // Nº sequencial do registro de lote
@@ -365,20 +368,21 @@ class Bancoob extends AbstractRemessa implements RemessaContract
     }
 
     /**
-     * @param integer $nSequencialLote
-     * @param BoletoContract $boleto
+     * @param integer $nSequentialLot
+     * @param SlipInterface $boleto
      *
+     * @return Bancoob
      * @throws Exception
      */
-    public function segmentoS($nSequencialLote, BoletoContract $boleto)
+    public function segmentS($nSequentialLot, SlipInterface $boleto)
     {
-        $this->qtyRegistrosLote = $nSequencialLote;
-        $this->iniciaDetalhe();
+        $this->RegistryLotAmount = $nSequentialLot;
+        $this->initiateDetail();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getCodigoBanco())); //Código do Banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
-        $this->add(9, 13, Util::formatCnab(9, $nSequencialLote, 5)); // Nº sequencial do registro de lote
+        $this->add(9, 13, Util::formatCnab(9, $nSequentialLot, 5)); // Nº sequencial do registro de lote
         $this->add(14, 14, Util::formatCnab('9', 'S', 1)); // Nº sequencial do registro de lote
         $this->add(15, 15, ''); // Reservado (Uso Banco)
         $this->add(16, 17, '01'); // Código de movimento remessa
@@ -390,28 +394,33 @@ class Bancoob extends AbstractRemessa implements RemessaContract
 
     /**
      * @return $this
+     * @throws Exception
      */
     protected function trailer()
     {
-        $this->iniciaTrailer();
+        $this->initiateTrailer();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getCodigoBanco())); //Codigo do banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do banco
         $this->add(4, 7, '9999'); // Numero do lote remessa
         $this->add(8, 8, '9'); //Tipo de registro
         $this->add(9, 17, ''); // Reservado (Uso Banco)
         $this->add(18, 23, Util::formatCnab(9, 1, 6)); // Qtd de lotes do arquivo
-        $this->add(24, 29, Util::formatCnab(9, ($this->qtyRegistrosLote + 4), 6)); // Qtd de lotes do arquivo
+        $this->add(24, 29, Util::formatCnab(9, ($this->RegistryLotAmount + 4), 6)); // Qtd de lotes do arquivo
         $this->add(30, 35, Util::formatCnab(9, 0, 6));
         $this->add(36, 240, ''); // Reservado (Uso Banco)
 
         return $this;
     }
 
+    /**
+     * @return $this|mixed
+     * @throws Exception
+     */
     protected function headerLote()
     {
-        $this->iniciaHeaderLote();
+        $this->initiateHeaderLot();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getCodigoBanco())); //Codigo do banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Codigo do banco
         $this->add(4, 7, '0001'); // Lote de Serviço
         $this->add(8, 8, '1'); // Tipo de Registro
         $this->add(9, 9, 'R'); // Tipo de operação
@@ -419,18 +428,18 @@ class Bancoob extends AbstractRemessa implements RemessaContract
         $this->add(12, 13, ''); // Reservados (Uso Banco)
         $this->add(14, 16, '040'); // Versão do layout
         $this->add(17, 17, ''); // Reservados (Uso Banco)
-        $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiario()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição da empresa
-        $this->add(19, 33, Util::formatCnab('9L', $this->getBeneficiario()->getDocument(), 14)); // Numero de inscrição da empresa
+        $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiary()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição da empresa
+        $this->add(19, 33, Util::formatCnab('9L', $this->getBeneficiary()->getDocument(), 14)); // Numero de inscrição da empresa
         $this->add(34, 53, ''); // Reservados (Uso Banco)
-        $this->add(54, 58, Util::formatCnab(9, $this->getAgencia(), 5)); // Agência do cedente
+        $this->add(54, 58, Util::formatCnab(9, $this->getAgency(), 5)); // Agência do cedente
         $this->add(59, 59, Util::formatCnab(9, '', 1)); // Digito verificador da Agência do cedente
-        $this->add(60, 71, Util::formatCnab(9, $this->getConta(), 12)); // Numero da conta corrente
-        $this->add(72, 72, Util::formatCnab('9', $this->getContaDv(), 1));
+        $this->add(60, 71, Util::formatCnab(9, $this->getAccount(), 12)); // Numero da conta corrente
+        $this->add(72, 72, Util::formatCnab('9', $this->getAccountCheckDigit(), 1));
         $this->add(73, 73, ''); // Reservados (Uso Banco)
-        $this->add(74, 103, Util::formatCnab('X', $this->getBeneficiario()->getName(), 30)); // Nome do cedente
+        $this->add(74, 103, Util::formatCnab('X', $this->getBeneficiary()->getName(), 30)); // Nome do cedente
         $this->add(104, 143, ''); // Mensagem 1
         $this->add(144, 183, ''); // Mensagem 2
-        $this->add(184, 191, Util::formatCnab(9, $this->getIdremessa(), 8)); // Número Remessa/retorno
+        $this->add(184, 191, Util::formatCnab(9, $this->getRemittanceId(), 8)); // Número Remessa/retorno
         $this->add(192, 199, date('dmY')); // Data de Gravação do arquivo
         $this->add(200, 207, '00000000');
         $this->add(208, 240, ''); // Reservado (Uso Banco)
@@ -438,16 +447,20 @@ class Bancoob extends AbstractRemessa implements RemessaContract
         return $this;
     }
 
+    /**
+     * @return $this|mixed
+     * @throws Exception
+     */
     protected function trailerLote() {
-        $this->iniciaTrailerLote();
+        $this->initiateTrailerLot();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getCodigoBanco())); //Codigo do banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Codigo do banco
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '5'); //Tipo de registro
         $this->add(9, 17, ''); // Reservado (Uso Banco)
         $this->add(18, 23, Util::formatCnab(9, 1, 6)); // Qtd de lotes do arquivo
-        $this->add(24, 29, Util::formatCnab(9, ($this->qtyRegistrosLote + 4), 6)); // Qtd de lotes do arquivo
-        $this->add(30, 46, Util::formatCnab(9, ($this->valorTotalTitulos * 100), 17, 2));
+        $this->add(24, 29, Util::formatCnab(9, ($this->RegistryLotAmount + 4), 6)); // Qtd de lotes do arquivo
+        $this->add(30, 46, Util::formatCnab(9, ($this->titleTotalAmount * 100), 17, 2));
         $this->add(47, 115, Util::formatCnab(9, 0, 69)); // Qtd de lotes do arquivo
         $this->add(116, 240, ''); // Reservado (Uso Banco)
 

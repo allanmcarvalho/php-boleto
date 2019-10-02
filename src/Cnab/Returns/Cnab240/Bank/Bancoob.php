@@ -84,7 +84,7 @@ class Bancoob extends AbstractRetorno implements RetornoCnabInterface240
      */
     private $rejeicoes = [
         '01' => 'Código do Banco Inválido',
-        '02' => 'Código do Registro Detalhe Inválido',
+        '02' => 'Código do Registro BaseDetailInterface Inválido',
         '03' => 'Código do Segmento Inválido',
         '04' => 'Código de Movimento Não Permitido para Carteira',
         '05' => 'Código de Movimento Inválido',

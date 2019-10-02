@@ -1,8 +1,8 @@
 <?php
 
-namespace PhpBoleto\Interfaces\Cnab\Retorno;
+namespace PhpBoleto\Interfaces\Cnab\Returns;
 
-interface Detalhe
+interface BaseDetailInterface
 {
     const OCORRENCIA_LIQUIDADA = 1;
     const OCORRENCIA_BAIXADA = 2;
@@ -15,88 +15,88 @@ interface Detalhe
     /**
      * @return mixed
      */
-    public function getNossoNumero();
+    public function getOurNumber();
 
     /**
      * @return mixed
      */
-    public function getNumeroDocumento();
+    public function getDocumentNumber();
 
     /**
      * @return mixed
      */
-    public function getOcorrencia();
+    public function getOccurrence();
 
     /**
      * @return mixed
      */
-    public function getOcorrenciaDescricao();
+    public function getOccurrenceDescription();
 
     /**
      * @return mixed
      */
-    public function getOcorrenciaTipo();
-
-    /**
-     * @param string $format
-     *
-     * @return mixed
-     */
-    public function getDataOcorrencia($format = 'd/m/Y');
+    public function getOccurrenceType();
 
     /**
      * @param string $format
      *
      * @return mixed
      */
-    public function getDataVencimento($format = 'd/m/Y');
+    public function getOccurrenceDate($format = 'd/m/Y');
 
     /**
      * @param string $format
      *
      * @return mixed
      */
-    public function getDataCredito($format = 'd/m/Y');
+    public function getDueDate($format = 'd/m/Y');
+
+    /**
+     * @param string $format
+     *
+     * @return mixed
+     */
+    public function getCreditDate($format = 'd/m/Y');
 
     /**
      * @return mixed
      */
-    public function getValor();
+    public function getValue();
 
     /**
      * @return mixed
      */
-    public function getValorTarifa();
+    public function getFareValue();
 
     /**
      * @return mixed
      */
-    public function getValorIOF();
+    public function getIOFValue();
 
     /**
      * @return mixed
      */
-    public function getValorAbatimento();
+    public function getAbatementValue();
 
     /**
      * @return mixed
      */
-    public function getValorDesconto();
+    public function getDiscountValue();
 
     /**
      * @return mixed
      */
-    public function getValorRecebido();
+    public function getReceivedValue();
 
     /**
      * @return mixed
      */
-    public function getValorMora();
+    public function getInterestValue();
 
     /**
      * @return mixed
      */
-    public function getValorMulta();
+    public function getFineValue();
 
     /**
      * @return string
@@ -111,7 +111,7 @@ interface Detalhe
     /**
      * @return boolean
      */
-    public function hasOcorrencia();
+    public function hasOccurrence();
 
     /**
      * @return array

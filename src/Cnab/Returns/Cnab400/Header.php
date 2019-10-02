@@ -3,7 +3,7 @@
 namespace PhpBoleto\Cnab\Returns\Cnab400;
 
 use Carbon\Carbon;
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Header as HeaderContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab400\Header as HeaderContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class Header implements HeaderContract
@@ -58,7 +58,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getOperacaoCodigo()
+    public function getOperationCode()
     {
         return $this->operacaoCodigo;
     }
@@ -78,7 +78,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getOperacao()
+    public function getOperation()
     {
         return $this->operacao;
     }
@@ -98,7 +98,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getServicoCodigo()
+    public function getServiceCode()
     {
         return $this->servicoCodigo;
     }
@@ -118,7 +118,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getServico()
+    public function getService()
     {
         return $this->servico;
     }
@@ -138,7 +138,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getAgencia()
+    public function getAgency()
     {
         return $this->agencia;
     }
@@ -158,7 +158,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getAgenciaDv()
+    public function getAgencyCheckDigit()
     {
         return $this->agenciaDv;
     }
@@ -178,7 +178,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getConta()
+    public function getAccount()
     {
         return $this->conta;
     }
@@ -198,7 +198,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getContaDv()
+    public function getAccountCheckDigit()
     {
         return $this->contaDv;
     }
@@ -220,7 +220,7 @@ class Header implements HeaderContract
      *
      * @return string
      */
-    public function getData($format = 'd/m/Y')
+    public function getDate($format = 'd/m/Y')
     {
         return $this->data instanceof Carbon
             ? $format === false ? $this->data : $this->data->format($format)
@@ -242,7 +242,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getConvenio()
+    public function getCovenant()
     {
         return $this->convenio;
     }
@@ -262,7 +262,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getCodigoCliente()
+    public function getClientCode()
     {
         return $this->codigoCliente;
     }

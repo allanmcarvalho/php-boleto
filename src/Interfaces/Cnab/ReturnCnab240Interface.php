@@ -2,52 +2,60 @@
 
 namespace PhpBoleto\Interfaces\Cnab;
 
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\DetailInterface;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\Header;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\HeaderLote;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\Trailer;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\TrailerLote;
+use PhpBoleto\Support\Collection;
+
 interface ReturnCnab240Interface extends CnabInterface
 {
     /**
      * @return mixed
      */
-    public function getCodigoBanco();
+    public function getBarCode();
 
     /**
      * @return mixed
      */
-    public function getBancoNome();
+    public function getBankName();
 
     /**
      * @return Collection
      */
-    public function getDetalhes();
+    public function getDetails();
 
     /**
-     * @return Retorno\Detalhe
+     * @param $i
+     * @return DetailInterface
      */
-    public function getDetalhe($i);
+    public function getDetail($i);
 
     /**
-     * @return Retorno\Header
+     * @return Header
      */
     public function getHeader();
 
     /**
-     * @return Retorno\HeaderLote
+     * @return HeaderLote
      */
-    public function getHeaderLote();
+    public function getHeaderLot();
 
     /**
-     * @return Retorno\TrailerLote
+     * @return TrailerLote
      */
-    public function getTrailerLote();
+    public function getTrailerLot();
 
     /**
-     * @return Retorno\Trailer
+     * @return Trailer
      */
     public function getTrailer();
 
     /**
      * @return string
      */
-    public function processar();
+    public function process();
 
     /**
      * @return array

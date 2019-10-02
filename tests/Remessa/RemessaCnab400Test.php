@@ -63,7 +63,7 @@ class RemessaCnab400Test extends TestCase
             'codigoCliente' => 11112222222,
             'beneficiario' => self::$beneficiario,
         ]);
-        $remessa->gerar();
+        $remessa->generate();
     }
 
     /**
@@ -77,7 +77,7 @@ class RemessaCnab400Test extends TestCase
             'codigoCliente' => 11112222222,
             'beneficiario' => self::$beneficiario,
         ]);
-        $remessa->gerar();
+        $remessa->generate();
     }
 
     public function testRemessaAddboletosCnab400(){
@@ -115,8 +115,8 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoletos([$boleto, $boleto2]);
-        $this->assertEquals(4, count(Util::file2array($remessa->gerar())));
+        $remessa->addSlips([$boleto, $boleto2]);
+        $this->assertEquals(4, count(Util::file2array($remessa->generate())));
     }
 
     public function testRemessaBanrisulCnab400()
@@ -151,7 +151,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -195,7 +195,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -244,7 +244,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -293,7 +293,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -341,7 +341,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -388,7 +388,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -435,7 +435,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -484,7 +484,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,
@@ -533,7 +533,7 @@ class RemessaCnab400Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,

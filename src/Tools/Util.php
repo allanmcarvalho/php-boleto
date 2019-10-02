@@ -615,51 +615,51 @@ final class Util
         $retorno[0] = array_fill(0, 400, '0');
 
         // header
-        self::adiciona($retorno[0], 1, 9, '02RETORNO');
+        self::addLine($retorno[0], 1, 9, '02RETORNO');
         switch ($banco) {
             case Interfaces\Slip\SlipInterface::BANK_CODE_BB:
-                self::adiciona($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
-                self::adiciona($retorno[0], 31, 31, self::remove(31, 31, $remessa[0]));
-                self::adiciona($retorno[0], 32, 39, self::remove(32, 39, $remessa[0]));
-                self::adiciona($retorno[0], 40, 40, self::remove(40, 40, $remessa[0]));
-                self::adiciona($retorno[0], 150, 156, self::remove(130, 136, $remessa[0]));
+                self::addLine($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
+                self::addLine($retorno[0], 31, 31, self::remove(31, 31, $remessa[0]));
+                self::addLine($retorno[0], 32, 39, self::remove(32, 39, $remessa[0]));
+                self::addLine($retorno[0], 40, 40, self::remove(40, 40, $remessa[0]));
+                self::addLine($retorno[0], 150, 156, self::remove(130, 136, $remessa[0]));
                 break;
             case Interfaces\Slip\SlipInterface::BANK_CODE_SANTANDER:
-                self::adiciona($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
-                self::adiciona($retorno[0], 39, 46, '0' . self::remove(40, 46, $remessa[0]));
+                self::addLine($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
+                self::addLine($retorno[0], 39, 46, '0' . self::remove(40, 46, $remessa[0]));
                 break;
             case Interfaces\Slip\SlipInterface::BANK_CODE_CEF:
-                self::adiciona($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
-                self::adiciona($retorno[0], 31, 36, self::remove(31, 36, $remessa[0]));
+                self::addLine($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
+                self::addLine($retorno[0], 31, 36, self::remove(31, 36, $remessa[0]));
                 break;
             case Interfaces\Slip\SlipInterface::BANK_CODE_BRADESCO:
-                self::adiciona($retorno[0], 27, 46, self::remove(27, 46, $remessa[0]));
+                self::addLine($retorno[0], 27, 46, self::remove(27, 46, $remessa[0]));
                 break;
             case Interfaces\Slip\SlipInterface::BANK_CODE_ITAU:
-                self::adiciona($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
-                self::adiciona($retorno[0], 33, 37, self::remove(33, 37, $remessa[0]));
-                self::adiciona($retorno[0], 38, 38, self::remove(38, 38, $remessa[0]));
+                self::addLine($retorno[0], 27, 30, self::remove(27, 30, $remessa[0]));
+                self::addLine($retorno[0], 33, 37, self::remove(33, 37, $remessa[0]));
+                self::addLine($retorno[0], 38, 38, self::remove(38, 38, $remessa[0]));
                 break;
             case Interfaces\Slip\SlipInterface::BANK_CODE_HSBC:
-                self::adiciona($retorno[0], 28, 31, self::remove(28, 31, $remessa[0]));
-                self::adiciona($retorno[0], 38, 43, self::remove(38, 43, $remessa[0]));
-                self::adiciona($retorno[0], 44, 44, self::remove(44, 44, $remessa[0]));
+                self::addLine($retorno[0], 28, 31, self::remove(28, 31, $remessa[0]));
+                self::addLine($retorno[0], 38, 43, self::remove(38, 43, $remessa[0]));
+                self::addLine($retorno[0], 44, 44, self::remove(44, 44, $remessa[0]));
                 break;
             case Interfaces\Slip\SlipInterface::BANK_CODE_SICREDI:
-                self::adiciona($retorno[0], 27, 31, self::remove(27, 31, $remessa[0]));
-                self::adiciona($retorno[0], 32, 45, self::remove(32, 45, $remessa[0]));
-                self::adiciona($retorno[0], 111, 117, self::remove(111, 117, $remessa[0]));
+                self::addLine($retorno[0], 27, 31, self::remove(27, 31, $remessa[0]));
+                self::addLine($retorno[0], 32, 45, self::remove(32, 45, $remessa[0]));
+                self::addLine($retorno[0], 111, 117, self::remove(111, 117, $remessa[0]));
                 break;
             case Interfaces\Slip\SlipInterface::BANK_CODE_BANRISUL:
-                self::adiciona($retorno[0], 27, 39, self::remove(18, 30, $remessa[0]));
-                self::adiciona($retorno[0], 47, 76, self::remove(47, 76, $remessa[0]));
+                self::addLine($retorno[0], 27, 39, self::remove(18, 30, $remessa[0]));
+                self::addLine($retorno[0], 47, 76, self::remove(47, 76, $remessa[0]));
                 break;
             default:
                 throw new Exception("Banco: $banco, inválido");
         }
-        self::adiciona($retorno[0], 77, 79, $banco);
-        self::adiciona($retorno[0], 95, 100, date('dmy'));
-        self::adiciona($retorno[0], 395, 400, sprintf('%06s', count($retorno)));
+        self::addLine($retorno[0], 77, 79, $banco);
+        self::addLine($retorno[0], 95, 100, date('dmy'));
+        self::addLine($retorno[0], 395, 400, sprintf('%06s', count($retorno)));
 
         array_shift($remessa); // removo o header
         array_pop($remessa); // remove o trailer
@@ -667,49 +667,49 @@ final class Util
         foreach ($remessa as $detalhe) {
             $i = count($retorno);
             $retorno[$i] = array_fill(0, 400, '0');
-            self::adiciona($retorno[$i], 1, 1, '1');
-            self::adiciona($retorno[$i], 109, 110, sprintf('%02s', $ocorrencia));
-            self::adiciona($retorno[$i], 111, 116, date('dmy'));
-            self::adiciona($retorno[$i], 153, 165, self::remove(127, 139, $detalhe));
-            self::adiciona($retorno[$i], 254, 266, self::remove(127, 139, $detalhe));
-            self::adiciona($retorno[$i], 147, 152, self::remove(121, 126, $detalhe));
-            self::adiciona($retorno[$i], 117, 126, self::remove(111, 120, $detalhe));
-            self::adiciona($retorno[$i], 395, 400, sprintf('%06s', count($retorno)));
+            self::addLine($retorno[$i], 1, 1, '1');
+            self::addLine($retorno[$i], 109, 110, sprintf('%02s', $ocorrencia));
+            self::addLine($retorno[$i], 111, 116, date('dmy'));
+            self::addLine($retorno[$i], 153, 165, self::remove(127, 139, $detalhe));
+            self::addLine($retorno[$i], 254, 266, self::remove(127, 139, $detalhe));
+            self::addLine($retorno[$i], 147, 152, self::remove(121, 126, $detalhe));
+            self::addLine($retorno[$i], 117, 126, self::remove(111, 120, $detalhe));
+            self::addLine($retorno[$i], 395, 400, sprintf('%06s', count($retorno)));
             switch ($banco) {
                 case Interfaces\Slip\SlipInterface::BANK_CODE_BB:
                     if (self::remove(1, 1, $detalhe) != 7) {
                         unset($retorno[$i]);
                         continue 2;
                     }
-                    self::adiciona($retorno[$i], 1, 1, '7');
-                    self::adiciona($retorno[$i], 64, 80, self::remove(64, 80, $detalhe));
+                    self::addLine($retorno[$i], 1, 1, '7');
+                    self::addLine($retorno[$i], 64, 80, self::remove(64, 80, $detalhe));
                     break;
                 case Interfaces\Slip\SlipInterface::BANK_CODE_SANTANDER:
-                    self::adiciona($retorno[$i], 63, 71, self::remove(63, 71, $detalhe));
-                    self::adiciona($retorno[$i], 384, 385, self::remove(384, 385, $detalhe));
+                    self::addLine($retorno[$i], 63, 71, self::remove(63, 71, $detalhe));
+                    self::addLine($retorno[$i], 384, 385, self::remove(384, 385, $detalhe));
                     break;
                 case Interfaces\Slip\SlipInterface::BANK_CODE_CEF:
-                    self::adiciona($retorno[$i], 57, 73, self::remove(57, 73, $detalhe));
+                    self::addLine($retorno[$i], 57, 73, self::remove(57, 73, $detalhe));
                     break;
                 case Interfaces\Slip\SlipInterface::BANK_CODE_BRADESCO:
-                    self::adiciona($retorno[$i], 25, 29, self::remove(25, 29, $detalhe));
-                    self::adiciona($retorno[$i], 30, 36, self::remove(30, 36, $detalhe));
-                    self::adiciona($retorno[$i], 37, 37, self::remove(37, 37, $detalhe));
-                    self::adiciona($retorno[$i], 71, 82, self::remove(71, 82, $detalhe));
+                    self::addLine($retorno[$i], 25, 29, self::remove(25, 29, $detalhe));
+                    self::addLine($retorno[$i], 30, 36, self::remove(30, 36, $detalhe));
+                    self::addLine($retorno[$i], 37, 37, self::remove(37, 37, $detalhe));
+                    self::addLine($retorno[$i], 71, 82, self::remove(71, 82, $detalhe));
                     break;
                 case Interfaces\Slip\SlipInterface::BANK_CODE_ITAU:
-                    self::adiciona($retorno[$i], 86, 94, self::remove(63, 70, $detalhe));
+                    self::addLine($retorno[$i], 86, 94, self::remove(63, 70, $detalhe));
                     break;
                 case Interfaces\Slip\SlipInterface::BANK_CODE_HSBC:
-                    self::adiciona($retorno[$i], 63, 73, self::remove(63, 73, $detalhe));
+                    self::addLine($retorno[$i], 63, 73, self::remove(63, 73, $detalhe));
                     break;
                 case Interfaces\Slip\SlipInterface::BANK_CODE_SICREDI:
-                    self::adiciona($retorno[$i], 48, 62, '00000' . self::remove(48, 56, $detalhe));
+                    self::addLine($retorno[$i], 48, 62, '00000' . self::remove(48, 56, $detalhe));
                     break;
                 case Interfaces\Slip\SlipInterface::BANK_CODE_BANRISUL:
-                    self::adiciona($retorno[$i], 38, 62, self::remove(38, 62, $detalhe));
-                    self::adiciona($retorno[$i], 63, 72, self::remove(111, 120, $detalhe));
-                    self::adiciona($retorno[$i], 18, 30, self::remove(18, 30, $detalhe));
+                    self::addLine($retorno[$i], 38, 62, self::remove(38, 62, $detalhe));
+                    self::addLine($retorno[$i], 63, 72, self::remove(111, 120, $detalhe));
+                    self::addLine($retorno[$i], 18, 30, self::remove(18, 30, $detalhe));
                     break;
                 default:
                     throw new Exception("Banco: $banco, inválido");
@@ -718,8 +718,8 @@ final class Util
 
         $i = count($retorno);
         $retorno[$i] = array_fill(0, 400, '0');
-        self::adiciona($retorno[$i], 1, 1, '9');
-        self::adiciona($retorno[$i], 395, 400, sprintf('%06s', count($retorno)));
+        self::addLine($retorno[$i], 1, 1, '9');
+        self::addLine($retorno[$i], 395, 400, sprintf('%06s', count($retorno)));
 
         $retorno = array_map(
             function ($a) {
@@ -774,7 +774,7 @@ final class Util
      * @return array
      * @throws Exception
      */
-    public static function adiciona(&$line, $i, $f, $value)
+    public static function addLine(&$line, $i, $f, $value)
     {
         $i--;
 
@@ -888,7 +888,7 @@ final class Util
      */
     public static function addPerson(&$property, $obj)
     {
-        if (is_subclass_of($obj, 'Newerton\\Yii2Boleto\\Contracts\\Person')) {
+        if (is_subclass_of($obj, 'PhpBoleto\\Interfaces\\Person\\PersonInterface')) {
             $property = $obj;
             return $obj;
         } elseif (is_array($obj)) {

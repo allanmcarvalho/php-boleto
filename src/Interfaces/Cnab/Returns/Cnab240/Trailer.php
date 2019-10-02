@@ -1,28 +1,28 @@
 <?php
 
-namespace PhpBoleto\Interfaces\Cnab\Retorno\Cnab240;
+namespace PhpBoleto\Interfaces\Cnab\Returns\Cnab240;
 
 interface Trailer
 {
     /**
      * @return mixed
      */
-    public function getTipoRegistro();
+    public function getRegistryType();
 
     /**
      * @return mixed
      */
-    public function getNumeroLoteRemessa();
+    public function getRemittanceLotNumber();
 
     /**
      * @return mixed
      */
-    public function getQtdLotesArquivo();
+    public function getFileLotAmount();
 
     /**
      * @return mixed
      */
-    public function getQtdRegistroArquivo();
+    public function getFileRecordAmount();
 
     /**
      * @return array

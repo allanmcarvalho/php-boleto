@@ -2,7 +2,7 @@
 
 namespace PhpBoleto\Cnab\Returns\Cnab400;
 
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab400\Trailer as TrailerContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab400\Trailer as TrailerContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class Trailer implements TrailerContract
@@ -44,7 +44,7 @@ class Trailer implements TrailerContract
     /**
      * @return float
      */
-    public function getValorTitulos()
+    public function getTitlesValue()
     {
         return $this->valorTitulos;
     }
@@ -64,7 +64,7 @@ class Trailer implements TrailerContract
     /**
      * @return int
      */
-    public function getAvisos()
+    public function getWarnings()
     {
         return $this->avisos;
     }
@@ -84,7 +84,7 @@ class Trailer implements TrailerContract
     /**
      * @return int
      */
-    public function getQuantidadeTitulos()
+    public function getTitlesAmount()
     {
         return $this->quantidadeTitulos;
     }
@@ -104,7 +104,7 @@ class Trailer implements TrailerContract
     /**
      * @return int
      */
-    public function getQuantidadeLiquidados()
+    public function getLiquidatedAmount()
     {
         return $this->quantidadeLiquidados;
     }
@@ -124,7 +124,7 @@ class Trailer implements TrailerContract
     /**
      * @return int
      */
-    public function getQuantidadeBaixados()
+    public function getDropAmount()
     {
         return $this->quantidadeBaixados;
     }
@@ -144,7 +144,7 @@ class Trailer implements TrailerContract
     /**
      * @return int
      */
-    public function getQuantidadeEntradas()
+    public function getEnterAmount()
     {
         return $this->quantidadeEntradas;
     }
@@ -164,7 +164,7 @@ class Trailer implements TrailerContract
     /**
      * @return int
      */
-    public function getQuantidadeAlterados()
+    public function getChangedAmount()
     {
         return $this->quantidadeAlterados;
     }
@@ -184,7 +184,7 @@ class Trailer implements TrailerContract
     /**
      * @return int
      */
-    public function getQuantidadeErros()
+    public function getErrorsAmount()
     {
         return $this->quantidadeErros;
     }

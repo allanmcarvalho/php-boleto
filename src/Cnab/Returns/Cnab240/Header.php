@@ -3,7 +3,7 @@
 namespace PhpBoleto\Cnab\Returns\Cnab240;
 
 use Carbon\Carbon;
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\Header as HeaderContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\Header as HeaderContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class Header implements HeaderContract
@@ -101,7 +101,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getLoteServico()
+    public function getServiceLot()
     {
         return $this->loteServico;
     }
@@ -121,7 +121,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getTipoRegistro()
+    public function getRegistryType()
     {
         return $this->tipoRegistro;
     }
@@ -141,7 +141,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getTipoInscricao()
+    public function getSubscriptionType()
     {
         return $this->tipoInscricao;
     }
@@ -161,7 +161,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getAgencia()
+    public function getAgency()
     {
         return $this->agencia;
     }
@@ -181,7 +181,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getAgenciaDv()
+    public function getAgencyCheckDigit()
     {
         return $this->agenciaDv;
     }
@@ -201,7 +201,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getNomeEmpresa()
+    public function getCompanySocialName()
     {
         return $this->nomeEmpresa;
     }
@@ -221,7 +221,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getHoraGeracao()
+    public function getGenerationHour()
     {
         return $this->horaGeracao;
     }
@@ -241,7 +241,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getNumeroSequencialArquivo()
+    public function getSequentialFileNumber()
     {
         return $this->numeroSequencialArquivo;
     }
@@ -261,7 +261,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getVersaoLayoutArquivo()
+    public function getLayoutFileVersion()
     {
         return $this->versaoLayoutArquivo;
     }
@@ -281,7 +281,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getNumeroInscricao()
+    public function getSubscriptionNumber()
     {
         return $this->numeroInscricao;
     }
@@ -301,7 +301,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getConta()
+    public function getAccount()
     {
         return $this->conta;
     }
@@ -321,7 +321,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getContaDv()
+    public function getAccountCheckDigit()
     {
         return $this->contaDv;
     }
@@ -341,7 +341,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getCodigoCedente()
+    public function getAssignorCode()
     {
         return $this->codigoCedente;
     }
@@ -363,7 +363,7 @@ class Header implements HeaderContract
      *
      * @return string
      */
-    public function getData($format = 'd/m/Y')
+    public function getDate($format = 'd/m/Y')
     {
         return $this->data instanceof Carbon
             ? $format === false ? $this->data : $this->data->format($format)
@@ -387,7 +387,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getConvenio()
+    public function getCovenant()
     {
         return $this->convenio;
     }
@@ -407,7 +407,7 @@ class Header implements HeaderContract
     /**
      * @return int
      */
-    public function getCodBanco()
+    public function getBankCode()
     {
         return $this->codBanco;
     }
@@ -427,7 +427,7 @@ class Header implements HeaderContract
     /**
      * @return int
      */
-    public function getCodigoRemessaRetorno()
+    public function getRemittanceReturnCode()
     {
         return $this->codigoRemessaRetorno;
     }
@@ -447,7 +447,7 @@ class Header implements HeaderContract
     /**
      * @return string
      */
-    public function getNomeBanco()
+    public function getBankName()
     {
         return $this->nomeBanco;
     }

@@ -4,8 +4,8 @@ namespace PhpBoleto\Cnab\Returns\Cnab240;
 
 use Exception;
 use PhpBoleto\Cnab\Returns\AbstractRetorno as AbstractRetornoGeneric;
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\HeaderLote as HeaderLoteContract;
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\TrailerLote as TrailerLoteContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\HeaderLote as HeaderLoteContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\TrailerLote as TrailerLoteContract;
 
 /**
  * Class AbstractRetorno
@@ -166,14 +166,14 @@ abstract class AbstractRetorno extends AbstractRetornoGeneric
 
         foreach ($this->detalhe as $detalhe) {
             $arr = [
-                'ocorrenciaTipo' => $detalhe->getOcorrenciaTipo(),
-                'ocorrenciaDescricao' => $detalhe->getOcorrenciaDescricao(),
+                'ocorrenciaTipo' => $detalhe->getOccurrenceType(),
+                'ocorrenciaDescricao' => $detalhe->getOccurrenceDescription(),
                 'segmentoT' => $detalhe->getSegmentoT()->toArray(),
                 'segmentoU' => $detalhe->getSegmentoU()->toArray(),
                 'segmentoY' => $detalhe->getSegmentoY()->toArray(),
             ];
 
-            if ($detalhe->getOcorrenciaTipo() == 9) {
+            if ($detalhe->getOccurrenceType() == 9) {
                 $arr['error'] = [
                     'message' => $detalhe->getError(),
                     'code' => $detalhe->getErrorCode(),

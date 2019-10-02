@@ -2,7 +2,7 @@
 
 namespace PhpBoleto\Cnab\Returns\Cnab240;
 
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\TrailerLote as TrailerLoteContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\TrailerLote as TrailerLoteContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class TrailerLote implements TrailerLoteContract
@@ -71,7 +71,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getLoteServico()
+    public function getServiceLot()
     {
         return $this->loteServico;
     }
@@ -91,7 +91,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getNumeroAvisoLancamento()
+    public function getEntryWarningNumber()
     {
         return $this->numeroAvisoLancamento;
     }
@@ -111,7 +111,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getQtdRegistroLote()
+    public function getRegistryLotAmount()
     {
         return $this->qtdRegistroLote;
     }
@@ -131,7 +131,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getQtdTitulosCobrancaCaucionada()
+    public function getSecuredChargeAmount()
     {
         return $this->qtdTitulosCobrancaCaucionada;
     }
@@ -151,7 +151,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getQtdTitulosCobrancaDescontada()
+    public function getDiscountedChargeAmount()
     {
         return $this->qtdTitulosCobrancaDescontada;
     }
@@ -171,7 +171,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getQtdTitulosCobrancaSimples()
+    public function getSimpleChargeAmount()
     {
         return $this->qtdTitulosCobrancaSimples;
     }
@@ -191,7 +191,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getQtdTitulosCobrancaVinculada()
+    public function getAttachedChargeAmount()
     {
         return $this->qtdTitulosCobrancaVinculada;
     }
@@ -211,7 +211,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getTipoRegistro()
+    public function getRegistryType()
     {
         return $this->TipoRegistro;
     }
@@ -231,7 +231,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getValorTotalTitulosCobrancaSimples()
+    public function getSimpleChargeTotalAmount()
     {
         return $this->valorTotalTitulosCobranca;
     }
@@ -251,7 +251,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getValorTotalTitulosCobrancaCaucionada()
+    public function getSecuredChargeTotalAmount()
     {
         return $this->valorTotalTitulosCobrancaCaucionada;
     }
@@ -271,7 +271,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getValorTotalTitulosCobrancaDescontada()
+    public function getDiscountedChargeTotalAmount()
     {
         return $this->valorTotalTitulosCobrancaDescontada;
     }
@@ -291,7 +291,7 @@ class TrailerLote implements TrailerLoteContract
     /**
      * @return mixed
      */
-    public function getValorTotalTitulosCobrancaVinculada()
+    public function getAttachedChargeTotalAmount()
     {
         return $this->valorTotalTitulosCobrancaVinculada;
     }

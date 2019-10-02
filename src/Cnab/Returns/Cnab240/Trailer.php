@@ -2,7 +2,7 @@
 
 namespace PhpBoleto\Cnab\Returns\Cnab240;
 
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\Trailer as TrailerContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\Trailer as TrailerContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class Trailer implements TrailerContract
@@ -31,7 +31,7 @@ class Trailer implements TrailerContract
     /**
      * @return mixed
      */
-    public function getTipoRegistro()
+    public function getRegistryType()
     {
         return $this->tipoRegistro;
     }
@@ -51,7 +51,7 @@ class Trailer implements TrailerContract
     /**
      * @return mixed
      */
-    public function getNumeroLoteRemessa()
+    public function getRemittanceLotNumber()
     {
         return $this->numeroLote;
     }
@@ -71,7 +71,7 @@ class Trailer implements TrailerContract
     /**
      * @return mixed
      */
-    public function getQtdLotesArquivo()
+    public function getFileLotAmount()
     {
         return $this->qtdLotesArquivo;
     }
@@ -91,7 +91,7 @@ class Trailer implements TrailerContract
     /**
      * @return mixed
      */
-    public function getQtdRegistroArquivo()
+    public function getFileRecordAmount()
     {
         return $this->qtdRegistroArquivo;
     }

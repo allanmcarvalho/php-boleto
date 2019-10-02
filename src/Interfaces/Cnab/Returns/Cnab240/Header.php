@@ -1,99 +1,100 @@
 <?php
-namespace PhpBoleto\Interfaces\Cnab\Retorno\Cnab240;
+
+namespace PhpBoleto\Interfaces\Cnab\Returns\Cnab240;
 
 interface Header
 {
     /**
      * @return string
      */
-    public function getLoteServico();
+    public function getServiceLot();
 
     /**
      * @return string
      */
-    public function getTipoRegistro();
+    public function getRegistryType();
 
     /**
      * @return string
      */
-    public function getTipoInscricao();
+    public function getSubscriptionType();
 
     /**
      * @return string
      */
-    public function getAgencia();
+    public function getAgency();
 
     /**
      * @return string
      */
-    public function getAgenciaDv();
+    public function getAgencyCheckDigit();
 
     /**
      * @return string
      */
-    public function getNomeEmpresa();
+    public function getCompanySocialName();
 
     /**
      * @return string
      */
-    public function getHoraGeracao();
+    public function getGenerationHour();
 
     /**
      * @return string
      */
-    public function getNumeroSequencialArquivo();
+    public function getSequentialFileNumber();
 
     /**
      * @return string
      */
-    public function getVersaoLayoutArquivo();
+    public function getLayoutFileVersion();
 
     /**
      * @return string
      */
-    public function getNumeroInscricao();
+    public function getSubscriptionNumber();
 
     /**
      * @return string
      */
-    public function getConta();
+    public function getAccount();
 
     /**
      * @return string
      */
-    public function getContaDv();
+    public function getAccountCheckDigit();
 
     /**
      * @return string
      */
-    public function getCodigoCedente();
+    public function getAssignorCode();
 
     /**
      * @param string $format
      *
      * @return string
      */
-    public function getData($format = 'd/m/Y');
+    public function getDate($format = 'd/m/Y');
 
     /**
      * @return string
      */
-    public function getConvenio();
+    public function getCovenant();
 
     /**
      * @return int
      */
-    public function getCodBanco();
+    public function getBankCode();
 
     /**
      * @return int
      */
-    public function getCodigoRemessaRetorno();
+    public function getRemittanceReturnCode();
 
     /**
      * @return string
      */
-    public function getNomeBanco();
+    public function getBankName();
 
     /**
      * @return array

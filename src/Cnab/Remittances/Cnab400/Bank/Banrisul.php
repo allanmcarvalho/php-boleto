@@ -4,16 +4,16 @@
 namespace PhpBoleto\Cnab\Remittances\Cnab400\Bank;
 
 use Exception;
-use PhpBoleto\Cnab\Remittances\Cnab400\AbstractRemessa;
-use PhpBoleto\Interfaces\Cnab\Remessa as RemessaContract;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
-use PhpBoleto\Util;
+use PhpBoleto\Cnab\Remittances\Cnab400\RemittanceAbstract;
+use PhpBoleto\Interfaces\Cnab\RemittanceInterface;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
+use PhpBoleto\Tools\Util;
 
 /**
  * Class Banrisul
  * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
  */
-class Banrisul extends AbstractRemessa implements RemessaContract
+class Banrisul extends RemittanceAbstract implements RemittanceInterface
 {
     const TIPO_COBRANCA_DIRETA = '04';
     const TIPO_COBRANCA_ESCRITURAL = '06';
@@ -56,22 +56,22 @@ class Banrisul extends AbstractRemessa implements RemessaContract
     public function __construct(array $params = [])
     {
         parent::__construct($params);
-        $this->addCampoObrigatorio('codigoCliente');
+        $this->addRequiredField('clientCode');
     }
 
     /**
-     * Valor total dos titulos
+     * Valor total dos títulos
      *
      * @var int
      */
-    private $valorTotal = 0;
+    private $titleTotal = 0;
 
     /**
      * Código do banco
      *
      * @var string
      */
-    protected $codigoBanco = BoletoContract::BANK_CODE_BANRISUL;
+    protected $bankCode = SlipInterface::BANK_CODE_BANRISUL;
 
     /**
      * Define as carteiras disponíveis para este banco
@@ -97,52 +97,52 @@ class Banrisul extends AbstractRemessa implements RemessaContract
      *
      * @var array
      */
-    protected $carteiras = ['1', '2', '3', '4', '5', '6', '7', '8', 'C', 'D', 'E', 'F', 'H', 'I', 'K', 'M', '9', 'R', 'S', 'X'];
+    protected $wallets = ['1', '2', '3', '4', '5', '6', '7', '8', 'C', 'D', 'E', 'F', 'H', 'I', 'K', 'M', '9', 'R', 'S', 'X'];
 
     /**
      * Caracter de fim de linha
      *
      * @var string
      */
-    protected $fimLinha = "\r\n";
+    protected $eolChar = "\r\n";
 
     /**
      * Caracter de fim de arquivo
      *
      * @var null
      */
-    protected $fimArquivo = "\r\n";
+    protected $endOfFileChar = "\r\n";
 
     /**
      * Codigo do cliente junto ao banco.
      *
      * @var string
      */
-    protected $codigoCliente;
+    protected $clientCode;
     /**
      * Codigo do cliente office banking junto ao banco.
      *
      * @var string
      */
-    protected $codigoClienteOfficeBanking;
+    protected $ClientCodeOfficeBanking;
 
     /**
      * Remessa em teste
      *
      * @var bool
      */
-    protected $teste = false;
+    protected $test = false;
 
     /**
      * Define se é teste
      *
-     * @param  bool $teste
+     * @param bool $test
      * @return $this
      */
 
-    public function setTeste(bool $teste)
+    public function setTest(bool $test)
     {
-        $this->teste = $teste;
+        $this->test = $test;
         return $this;
     }
     /**
@@ -150,53 +150,53 @@ class Banrisul extends AbstractRemessa implements RemessaContract
      *
      * @return bool
      */
-    public function isTeste()
+    public function isTest()
     {
-        return $this->teste;
+        return $this->test;
     }
     /**
-     * Retorna o codigo do cliente.
+     * Retorna o código do cliente.
      *
      * @return mixed
      */
-    public function getCodigoCliente()
+    public function getClientCode()
     {
-        return $this->codigoCliente;
+        return $this->clientCode;
     }
 
     /**
-     * Seta o codigo do cliente.
+     * Seta o código do cliente.
      *
-     * @param mixed $codigoCliente
+     * @param mixed $clientCode
      *
      * @return Banrisul
      */
-    public function setCodigoCliente($codigoCliente)
+    public function setClientCode($clientCode)
     {
-        $this->codigoCliente = $codigoCliente;
+        $this->clientCode = $clientCode;
 
         return $this;
     }
     /**
-     * Retorna o codigo do cliente office banking.
+     * Retorna o código do cliente office banking.
      *
      * @return mixed
      */
-    public function getCodigoClienteOfficeBanking()
+    public function getClientCodeOfficeBanking()
     {
-        return $this->codigoClienteOfficeBanking;
+        return $this->ClientCodeOfficeBanking;
     }
 
     /**
-     * Seta o codigo do cliente office banking.
+     * Seta o código do cliente office banking.
      *
      * @param mixed $officeBanking
      *
      * @return Banrisul
      */
-    public function setCodigoClienteOfficeBanking($officeBanking)
+    public function setClientCodeOfficeBanking($officeBanking)
     {
-        $this->codigoClienteOfficeBanking = $officeBanking;
+        $this->ClientCodeOfficeBanking = $officeBanking;
 
         return $this;
     }
@@ -207,25 +207,25 @@ class Banrisul extends AbstractRemessa implements RemessaContract
      */
     protected function header()
     {
-        $this->iniciaHeader();
+        $this->initiateHeader();
 
         $cod_servico = '';
         $tipo_processamento = '';
         $cod_cliente = '';
         if ($this->isCarteiraRSX()) {
-            $cod_servico = $this->isTeste() ? '8808' : '0808';
-            $tipo_processamento = $this->isTeste() ? 'X' : 'P';
-            $cod_cliente = $this->getCodigoClienteOfficeBanking();
+            $cod_servico = $this->isTest() ? '8808' : '0808';
+            $tipo_processamento = $this->isTest() ? 'X' : 'P';
+            $cod_cliente = $this->getClientCodeOfficeBanking();
         }
 
         $this->add(1, 1, '0');
         $this->add(2, 2, '1');
         $this->add(3, 9, 'REMESSA');
         $this->add(10, 26, '');
-        $this->add(27, 39, Util::formatCnab('9', $this->getCodigoCliente(), 13));
+        $this->add(27, 39, Util::formatCnab('9', $this->getClientCode(), 13));
         $this->add(40, 46, '');
-        $this->add(47, 76, Util::formatCnab('X', $this->getBeneficiario()->getName(), 30));
-        $this->add(77, 79, $this->getCodigoBanco());
+        $this->add(47, 76, Util::formatCnab('X', $this->getBeneficiary()->getName(), 30));
+        $this->add(77, 79, $this->getBankCode());
         $this->add(80, 87, Util::formatCnab('X', 'BANRISUL', 8));
         $this->add(88, 94, '');
         $this->add(95, 100, date('dmy'));
@@ -242,78 +242,78 @@ class Banrisul extends AbstractRemessa implements RemessaContract
     }
 
     /**
-     * @param BoletoContract $boleto
+     * @param SlipInterface $slip
      *
      * @return bool
      * @throws Exception
      */
-    public function addBoleto(BoletoContract $boleto)
+    public function addSlip(SlipInterface $slip)
     {
-        $this->iniciaDetalhe();
+        $this->initiateDetail();
 
         $this->add(1, 1, 1);
         $this->add(2, 17, '');
-        $this->add(18, 30, Util::formatCnab('9', $this->getCodigoCliente(), 13, '0'));
+        $this->add(18, 30, Util::formatCnab('9', $this->getClientCode(), 13, '0'));
         $this->add(31, 37, '');
-        $this->add(38, 62, Util::formatCnab('X', $boleto->getControlNumber(), 25));
-        $this->add(63, 72, Util::formatCnab('9L', $boleto->getOurNumber(), 10));
+        $this->add(38, 62, Util::formatCnab('X', $slip->getControlNumber(), 25));
+        $this->add(63, 72, Util::formatCnab('9L', $slip->getOurNumber(), 10));
         $this->add(73, 104, '');
         $this->add(105, 107, '');
-        $this->add(108, 108, Util::formatCnab('X', $this->getCarteiraNumero(), 1));
+        $this->add(108, 108, Util::formatCnab('X', $this->getWalletNumber(), 1));
         $this->add(109, 110, self::OCORRENCIA_REMESSA); // REGISTRO
-        if ($boleto->getStatus() == $boleto::STATUS_DROP) {
+        if ($slip->getStatus() == $slip::STATUS_DROP) {
             $this->add(109, 110, self::OCORRENCIA_PEDIDO_BAIXA); // BAIXA
         }
-        if ($boleto->getStatus() == $boleto::STATUS_ALTER) {
+        if ($slip->getStatus() == $slip::STATUS_ALTER) {
             $this->add(109, 110, self::OCORRENCIA_ALT_VENCIMENTO); // ALTERAR VENCIMENTO
         }
-        $this->add(111, 120, Util::formatCnab('X', $boleto->getDocumentNumber(), 10));
-        $this->add(121, 126, $boleto->getDueDate()->format('dmy'));
-        $this->add(127, 139, Util::formatCnab('9', $boleto->getValue(), 13, 2));
-        $this->add(140, 142, $this->getCodigoBanco());
+        $this->add(111, 120, Util::formatCnab('X', $slip->getDocumentNumber(), 10));
+        $this->add(121, 126, $slip->getDueDate()->format('dmy'));
+        $this->add(127, 139, Util::formatCnab('9', $slip->getValue(), 13, 2));
+        $this->add(140, 142, $this->getBankCode());
         $this->add(143, 147, '');
         $this->add(148, 149, $this->isCarteiraRSX() ? '' : self::TIPO_COBRANCA_CREDENCIADA);
-        $this->add(150, 150, $boleto->getAcceptance());
-        $this->add(151, 156, $boleto->getDocumentDate()->format('dmy'));
+        $this->add(150, 150, $slip->getAcceptance());
+        $this->add(151, 156, $slip->getDocumentDate()->format('dmy'));
         $this->add(157, 158, self::INSTRUCAO_SEM);
         $this->add(159, 160, self::INSTRUCAO_SEM);
-        if ($boleto->getProtestAfter() > 0) {
+        if ($slip->getProtestAfter() > 0) {
             $this->add(157, 158, self::INSTRUCAO_PROTESTAR_XX);
-        } elseif ($boleto->getAutomaticDropAfter() > 0) {
+        } elseif ($slip->getAutomaticDropAfter() > 0) {
             $this->add(157, 158, self::INSTRUCAO_DEVOLVER_XX);
         }
-        if ($boleto->getFine() > 0) {
+        if ($slip->getFine() > 0) {
             $this->add(159, 160, self::INSTRUCAO_MULTA_XX);
         }
         $juros = 0;
-        if ($boleto->getInterest() > 0) {
-            $juros = Util::percent($boleto->getValue(), $boleto->getInterest())/30;
+        if ($slip->getInterest() > 0) {
+            $juros = Util::percent($slip->getValue(), $slip->getInterest()) / 30;
         }
         $this->add(161, 161, '0');
         $this->add(162, 173, Util::formatCnab('9', $juros, 12, 2));
-        $this->add(174, 179, $boleto->getDiscount() > 0 ? $boleto->getDiscountDate()->format('dmy') : '000000');
-        $this->add(180, 192, Util::formatCnab('9', $boleto->getDiscount(), 13, 2));
+        $this->add(174, 179, $slip->getDiscount() > 0 ? $slip->getDiscountDate()->format('dmy') : '000000');
+        $this->add(180, 192, Util::formatCnab('9', $slip->getDiscount(), 13, 2));
         $this->add(193, 205, Util::formatCnab('9', 0, 13, 2));
         $this->add(206, 218, Util::formatCnab('9', 0, 13, 2));
-        $this->add(219, 220, strlen(Util::onlyNumbers($boleto->getPayer()->getDocument())) == 14 ? '02' : '01');
-        $this->add(221, 234, Util::formatCnab('9L', $boleto->getPayer()->getDocument(), 14));
-        $this->add(235, 269, Util::formatCnab('X', $boleto->getPayer()->getName(), 35));
+        $this->add(219, 220, strlen(Util::onlyNumbers($slip->getPayer()->getDocument())) == 14 ? '02' : '01');
+        $this->add(221, 234, Util::formatCnab('9L', $slip->getPayer()->getDocument(), 14));
+        $this->add(235, 269, Util::formatCnab('X', $slip->getPayer()->getName(), 35));
         $this->add(270, 274, '');
-        $this->add(275, 314, Util::formatCnab('X', $boleto->getPayer()->getAddress(), 40));
+        $this->add(275, 314, Util::formatCnab('X', $slip->getPayer()->getAddress(), 40));
         $this->add(315, 321, '');
-        $this->add(322, 324, Util::formatCnab('9', $boleto->getFine(), 3, 1));
+        $this->add(322, 324, Util::formatCnab('9', $slip->getFine(), 3, 1));
         $this->add(325, 326, '00');
-        $this->add(327, 334, Util::formatCnab('9L', $boleto->getPayer()->getPostalCode(), 8));
-        $this->add(335, 349, Util::formatCnab('X', $boleto->getPayer()->getCity(), 15));
-        $this->add(350, 351, Util::formatCnab('X', $boleto->getPayer()->getStateUf(), 2));
+        $this->add(327, 334, Util::formatCnab('9L', $slip->getPayer()->getPostalCode(), 8));
+        $this->add(335, 349, Util::formatCnab('X', $slip->getPayer()->getCity(), 15));
+        $this->add(350, 351, Util::formatCnab('X', $slip->getPayer()->getStateUf(), 2));
         $this->add(352, 355, Util::formatCnab('9', 0, 3));
         $this->add(356, 357, '');
         $this->add(358, 369, '00');
-        $this->add(370, 371, Util::formatCnab('9', $boleto->getProtestAfter($boleto->getAutomaticDropAfter()), 2));
+        $this->add(370, 371, Util::formatCnab('9', $slip->getProtestAfter($slip->getAutomaticDropAfter()), 2));
         $this->add(372, 394, '');
-        $this->add(395, 400, Util::formatCnab('9', $this->iRegistros + 1, 6));
+        $this->add(395, 400, Util::formatCnab('9', $this->registryCount + 1, 6));
 
-        $this->valorTotal += $boleto->getValue();
+        $this->titleTotal += $slip->getValue();
 
         return true;
     }
@@ -324,11 +324,11 @@ class Banrisul extends AbstractRemessa implements RemessaContract
      */
     protected function trailer()
     {
-        $this->iniciaTrailer();
+        $this->InitiateTrailer();
 
         $this->add(1, 1, '9');
         $this->add(2, 27, '');
-        $this->add(28, 40, Util::formatCnab('9', $this->valorTotal, 13, 2));
+        $this->add(28, 40, Util::formatCnab('9', $this->titleTotal, 13, 2));
         $this->add(41, 394, '');
         $this->add(395, 400, Util::formatCnab('9', $this->getCount(), 6));
 
@@ -344,6 +344,6 @@ class Banrisul extends AbstractRemessa implements RemessaContract
      */
     private function isCarteiraRSX(array $adicional = [])
     {
-        return in_array(Util::upper($this->getCarteira()), array_merge(['R', 'S', 'X'], $adicional));
+        return in_array(Util::upper($this->getWallet()), array_merge(['R', 'S', 'X'], $adicional));
     }
 }

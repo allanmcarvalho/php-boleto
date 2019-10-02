@@ -3,16 +3,16 @@
 namespace PhpBoleto\Cnab\Remittances;
 
 use Exception;
-use PhpBoleto\Interfaces\PersonInterface as PessoaContract;
-use PhpBoleto\Interfaces\Slip\SlipInterface as BoletoContract;
+use PhpBoleto\Interfaces\Person\PersonInterface;
+use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Support\Collection;
-use PhpBoleto\Util;
+use PhpBoleto\Tools\Util;
 
 /**
- * Class AbstractRemessa
+ * Class GenericRemittanceAbstract
  * @package PhpBoleto\CnabInterface\Remessa
  */
-abstract class AbstractRemessa
+abstract class GenericRemittanceAbstract
 {
 
     const HEADER = 'header';
@@ -28,11 +28,11 @@ abstract class AbstractRemessa
      *
      * @var array
      */
-    private $camposObrigatorios = [
-        'carteira',
-        'agencia',
-        'conta',
-        'beneficiario',
+    private $requiredFields = [
+        'wallet',
+        'agency',
+        'account',
+        'beneficiary',
     ];
 
     /**
@@ -40,95 +40,95 @@ abstract class AbstractRemessa
      *
      * @var string
      */
-    protected $codigoBanco;
+    protected $bankCode;
 
     /**
      * Contagem dos registros Detalhes
      *
      * @var int
      */
-    protected $iRegistros = 0;
+    protected $registryCount = 0;
 
     /**
      * Array contendo o cnab.
      *
      * @var array
      */
-    protected $aRegistros = [
+    protected $registryArray = [
         self::HEADER => [],
         self::DETALHE => [],
         self::TRAILER => [],
     ];
 
     /**
-     * Variavel com ponteiro para linha que esta sendo editada.
+     * Variável com ponteiro para linha que esta sendo editada.
      *
      * @var
      */
-    protected $atual;
+    protected $linePointer;
 
     /**
      * Caracter de fim de linha
      *
      * @var string
      */
-    protected $fimLinha = "\n";
+    protected $eolChar = "\n";
 
     /**
      * Caracter de fim de arquivo
      *
      * @var null
      */
-    protected $fimArquivo = null;
+    protected $endOfFileChar = null;
 
     /**
      * ID do arquivo remessa, sequencial.
      *
      * @var
      */
-    protected $idremessa;
+    protected $remittanceId;
 
     /**
      * Agência
      *
      * @var int
      */
-    protected $agencia;
+    protected $agency;
 
     /**
      * Conta
      *
      * @var int
      */
-    protected $conta;
+    protected $account;
 
     /**
      * Dígito da conta
      *
      * @var int
      */
-    protected $contaDv;
+    protected $accountCheckDigit;
 
     /**
      * Carteira de cobrança.
      *
      * @var
      */
-    protected $carteira;
+    protected $wallet;
 
     /**
      * Define as carteiras disponíveis para cada banco
      *
      * @var array
      */
-    protected $carteiras = [];
+    protected $wallets = [];
 
     /**
-     * Entidade beneficiario (quem esta gerando a remessa)
+     * Entidade beneficiário (quem esta gerando a remessa)
      *
-     * @var PessoaContract
+     * @var PersonInterface
      */
-    protected $beneficiario;
+    protected $beneficiary;
 
     /**
      * Construtor
@@ -145,12 +145,12 @@ abstract class AbstractRemessa
      *
      * @return $this
      */
-    protected function setCamposObrigatorios()
+    protected function setRequiredFields()
     {
         $args = func_get_args();
-        $this->camposObrigatorios = [];
+        $this->requiredFields = [];
         foreach ($args as $arg) {
-            $this->addCampoObrigatorio($arg);
+            $this->addRequiredField($arg);
         }
 
         return $this;
@@ -161,12 +161,12 @@ abstract class AbstractRemessa
      *
      * @return $this
      */
-    protected function addCampoObrigatorio()
+    protected function addRequiredField()
     {
         $args = func_get_args();
         foreach ($args as $arg) {
             !is_array($arg) || call_user_func_array([$this, __FUNCTION__], $arg);
-            !is_string($arg) || array_push($this->camposObrigatorios, $arg);
+            !is_string($arg) || array_push($this->requiredFields, $arg);
         }
 
         return $this;
@@ -177,48 +177,48 @@ abstract class AbstractRemessa
      *
      * @return string
      */
-    public function getCodigoBanco()
+    public function getBankCode()
     {
-        return $this->codigoBanco;
+        return $this->bankCode;
     }
 
     /**
      * @return mixed
      */
-    public function getIdremessa()
+    public function getRemittanceId()
     {
-        return $this->idremessa;
+        return $this->remittanceId;
     }
 
     /**
-     * @param mixed $idremessa
+     * @param mixed $remittanceId
      *
-     * @return AbstractRemessa
+     * @return GenericRemittanceAbstract
      */
-    public function setIdremessa($idremessa)
+    public function setRemittanceId($remittanceId)
     {
-        $this->idremessa = $idremessa;
+        $this->remittanceId = $remittanceId;
 
         return $this;
     }
 
     /**
-     * @return PessoaContract
+     * @return PersonInterface
      */
-    public function getBeneficiario()
+    public function getBeneficiary()
     {
-        return $this->beneficiario;
+        return $this->beneficiary;
     }
 
     /**
-     * @param $beneficiario
+     * @param $beneficiary
      *
-     * @return AbstractRemessa
+     * @return GenericRemittanceAbstract
      * @throws Exception
      */
-    public function setBeneficiario($beneficiario)
+    public function setBeneficiary($beneficiary)
     {
-        Util::addPessoa($this->beneficiario, $beneficiario);
+        Util::addPerson($this->beneficiary, $beneficiary);
 
         return $this;
     }
@@ -226,12 +226,12 @@ abstract class AbstractRemessa
     /**
      * Define a agência
      *
-     * @param $agencia
+     * @param $agency
      * @return $this
      */
-    public function setAgencia($agencia)
+    public function setAgency($agency)
     {
-        $this->agencia = (string)$agencia;
+        $this->agency = (string)$agency;
 
         return $this;
     }
@@ -241,20 +241,20 @@ abstract class AbstractRemessa
      *
      * @return int
      */
-    public function getAgencia()
+    public function getAgency()
     {
-        return $this->agencia;
+        return $this->agency;
     }
 
     /**
      * Define o número da conta
      *
-     * @param $conta
+     * @param $account
      * @return $this
      */
-    public function setConta($conta)
+    public function setAccount($account)
     {
-        $this->conta = (string)$conta;
+        $this->account = (string)$account;
 
         return $this;
     }
@@ -264,20 +264,20 @@ abstract class AbstractRemessa
      *
      * @return int
      */
-    public function getConta()
+    public function getAccount()
     {
-        return $this->conta;
+        return $this->account;
     }
 
     /**
      * Define o dígito verificador da conta
      *
-     * @param $contaDv
+     * @param $accountCheckDigit
      * @return $this
      */
-    public function setContaDv($contaDv)
+    public function setAccountCheckDigit($accountCheckDigit)
     {
-        $this->contaDv = substr($contaDv, -1);
+        $this->accountCheckDigit = substr($accountCheckDigit, -1);
 
         return $this;
     }
@@ -287,24 +287,24 @@ abstract class AbstractRemessa
      *
      * @return int
      */
-    public function getContaDv()
+    public function getAccountCheckDigit()
     {
-        return $this->contaDv;
+        return $this->accountCheckDigit;
     }
 
     /**
      * Define o código da carteira (Com ou sem registro)
      *
-     * @param $carteira
+     * @param $wallet
      * @return $this
      * @throws Exception
      */
-    public function setCarteira($carteira)
+    public function setWallet($wallet)
     {
-        if (!in_array($carteira, $this->getCarteiras())) {
+        if (!in_array($wallet, $this->getWallets())) {
             throw new Exception("Carteira não disponível!");
         }
-        $this->carteira = $carteira;
+        $this->wallet = $wallet;
 
         return $this;
     }
@@ -314,9 +314,9 @@ abstract class AbstractRemessa
      *
      * @return string
      */
-    public function getCarteira()
+    public function getWallet()
     {
-        return $this->carteira;
+        return $this->wallet;
     }
 
     /**
@@ -324,9 +324,9 @@ abstract class AbstractRemessa
      *
      * @return string
      */
-    public function getCarteiraNumero()
+    public function getWalletNumber()
     {
-        return $this->carteira;
+        return $this->wallet;
     }
 
     /**
@@ -334,19 +334,19 @@ abstract class AbstractRemessa
      *
      * @return array
      */
-    public function getCarteiras()
+    public function getWallets()
     {
-        return $this->carteiras;
+        return $this->wallets;
     }
 
     /**
-     * Método que valida se o banco tem todos os campos obrigadotorios preenchidos
+     * Método que valida se o banco tem todos os campos obrigatórios preenchidos
      *
      * @return boolean
      */
     public function isValid()
     {
-        foreach ($this->camposObrigatorios as $campo) {
+        foreach ($this->requiredFields as $campo) {
             if (call_user_func([$this, 'get' . ucwords($campo)]) == '') {
                 return false;
             }
@@ -365,10 +365,10 @@ abstract class AbstractRemessa
     /**
      * Função para adicionar detalhe ao arquivo.
      *
-     * @param BoletoContract $detalhe
+     * @param SlipInterface $slip
      * @return mixed
      */
-    abstract public function addBoleto(BoletoContract $detalhe);
+    abstract public function addSlip(SlipInterface $slip);
 
     /**
      * Função que gera o trailer (footer) do arquivo.
@@ -384,19 +384,19 @@ abstract class AbstractRemessa
      */
     protected function getCount()
     {
-        return count($this->aRegistros[self::DETALHE]) + 2;
+        return count($this->registryArray[self::DETALHE]) + 2;
     }
 
     /**
-     * Função para adicionar multiplos boletos.
+     * Função para adicionar múltiplos boletos.
      *
-     * @param array $boletos
+     * @param SlipInterface[] $slips
      * @return $this
      */
-    public function addBoletos(array $boletos)
+    public function addSlips(array $slips)
     {
-        foreach ($boletos as $boleto) {
-            $this->addBoleto($boleto);
+        foreach ($slips as $slip) {
+            $this->addSlip($slip);
         }
 
         return $this;
@@ -409,10 +409,11 @@ abstract class AbstractRemessa
      * @param $f
      * @param $value
      * @return array
+     * @throws Exception
      */
     protected function add($i, $f, $value)
     {
-        return Util::adiciona($this->atual, $i, $f, $value);
+        return Util::addLine($this->linePointer, $i, $f, $value);
     }
 
     /**
@@ -422,7 +423,7 @@ abstract class AbstractRemessa
      */
     protected function getHeader()
     {
-        return $this->aRegistros[self::HEADER];
+        return $this->registryArray[self::HEADER];
     }
 
     /**
@@ -430,9 +431,9 @@ abstract class AbstractRemessa
      *
      * @return Collection
      */
-    protected function getDetalhes()
+    protected function getDetails()
     {
-        return new Collection($this->aRegistros[self::DETALHE]);
+        return new Collection($this->registryArray[self::DETALHE]);
     }
 
     /**
@@ -442,7 +443,7 @@ abstract class AbstractRemessa
      */
     protected function getTrailer()
     {
-        return $this->aRegistros[self::TRAILER];
+        return $this->registryArray[self::TRAILER];
     }
 
     /**
@@ -452,7 +453,7 @@ abstract class AbstractRemessa
      * @return string
      * @throws Exception
      */
-    protected function valida(array $a)
+    protected function validate(array $a)
     {
         if ($this->lineSize === false) {
             throw new Exception('Classe remessa deve informar o tamanho da linha');
@@ -471,7 +472,7 @@ abstract class AbstractRemessa
      *
      * @throws Exception
      */
-    public function gerar()
+    public function generate()
     {
         throw new Exception('Método não implementado');
     }
@@ -494,7 +495,7 @@ abstract class AbstractRemessa
             throw new Exception('Path ' . $folder . ' não possui permissao de escrita');
         }
 
-        $string = $this->gerar();
+        $string = $this->generate();
         file_put_contents($path, $string);
 
         return $path;
@@ -504,6 +505,7 @@ abstract class AbstractRemessa
      * Realiza o download da string retornada do metodo gerar
      *
      * @param null $filename
+     * @throws Exception
      */
     public function download($filename = null)
     {
@@ -512,6 +514,6 @@ abstract class AbstractRemessa
         }
         header('Content-type: text/plain');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
-        echo $this->gerar();
+        echo $this->generate();
     }
 }

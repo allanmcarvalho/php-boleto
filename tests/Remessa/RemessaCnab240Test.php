@@ -85,7 +85,7 @@ class RemessaCnab240Test extends TestCase
                 'beneficiario' => self::$beneficiario,
             ]
         );
-        $remessa->addBoleto($boleto);
+        $remessa->addSlip($boleto);
 
         $file = implode(DIRECTORY_SEPARATOR, [
             __DIR__,

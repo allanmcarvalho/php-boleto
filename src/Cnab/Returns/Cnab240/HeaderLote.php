@@ -3,7 +3,7 @@
 namespace PhpBoleto\Cnab\Returns\Cnab240;
 
 use Carbon\Carbon;
-use PhpBoleto\Interfaces\Cnab\Retorno\Cnab240\HeaderLote as HeaderLoteContract;
+use PhpBoleto\Interfaces\Cnab\Returns\Cnab240\HeaderLote as HeaderLoteContract;
 use PhpBoleto\Traits\MagicTrait;
 
 class HeaderLote implements HeaderLoteContract
@@ -132,7 +132,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getTipoRegistro()
+    public function getRegistryType()
     {
         return $this->tipoRegistro;
     }
@@ -192,7 +192,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getTipoOperacao()
+    public function getOperationType()
     {
         return $this->tipoOperacao;
     }
@@ -213,7 +213,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getTipoServico()
+    public function getServiceType()
     {
         return $this->tipoServico;
     }
@@ -255,7 +255,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getTipoInscricao()
+    public function getSubscriptionType()
     {
         return $this->tipoInscricao;
     }
@@ -277,7 +277,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getNumeroInscricao()
+    public function getSubscriptionNumber()
     {
         return $this->numeroInscricao;
     }
@@ -297,7 +297,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getCodigoCedente()
+    public function getAssignorCode()
     {
         return $this->codigoCedente;
     }
@@ -317,7 +317,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getConvenio()
+    public function getCovenant()
     {
         return $this->convenio;
     }
@@ -337,7 +337,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getNomeEmpresa()
+    public function getCompanySocialName()
     {
         return $this->nomeEmpresa;
     }
@@ -367,7 +367,7 @@ class HeaderLote implements HeaderLoteContract
      *
      * @return string
      */
-    public function getDataGravacao($format = 'd/m/Y')
+    public function getWritingDate($format = 'd/m/Y')
     {
         return $this->dataGravacao instanceof Carbon
             ? $format === false ? $this->dataGravacao : $this->dataGravacao->format($format)
@@ -393,7 +393,7 @@ class HeaderLote implements HeaderLoteContract
      *
      * @return string
      */
-    public function getDataCredito($format = 'd/m/Y')
+    public function getCreditDate($format = 'd/m/Y')
     {
         return $this->dataCredito instanceof Carbon
             ? $format === false ? $this->dataCredito : $this->dataCredito->format($format)
@@ -417,7 +417,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getAgencia()
+    public function getAgency()
     {
         return $this->agencia;
     }
@@ -438,7 +438,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getAgenciaDv()
+    public function getAgencyCheckDigit()
     {
         return $this->agenciaDv;
     }
@@ -458,7 +458,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getConta()
+    public function getAccount()
     {
         return $this->conta;
     }
@@ -478,7 +478,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getNumeroRetorno()
+    public function getReturnNumber()
     {
         return $this->numeroRetorno;
     }
@@ -498,7 +498,7 @@ class HeaderLote implements HeaderLoteContract
     /**
      * @return string
      */
-    public function getContaDv()
+    public function getAccountCheckDigit()
     {
         return $this->contaDv;
     }

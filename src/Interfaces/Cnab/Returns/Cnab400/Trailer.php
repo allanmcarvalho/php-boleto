@@ -1,47 +1,48 @@
 <?php
-namespace PhpBoleto\Interfaces\Cnab\Retorno\Cnab400;
+
+namespace PhpBoleto\Interfaces\Cnab\Returns\Cnab400;
 
 interface Trailer
 {
     /**
      * @return mixed
      */
-    public function getValorTitulos();
+    public function getTitlesValue();
 
     /**
      * @return mixed
      */
-    public function getAvisos();
+    public function getWarnings();
 
     /**
      * @return mixed
      */
-    public function getQuantidadeTitulos();
+    public function getTitlesAmount();
 
     /**
      * @return mixed
      */
-    public function getQuantidadeLiquidados();
+    public function getLiquidatedAmount();
 
     /**
      * @return mixed
      */
-    public function getQuantidadeBaixados();
+    public function getDropAmount();
 
     /**
      * @return mixed
      */
-    public function getQuantidadeEntradas();
+    public function getEnterAmount();
 
     /**
      * @return mixed
      */
-    public function getQuantidadeAlterados();
+    public function getChangedAmount();
 
     /**
      * @return mixed
      */
-    public function getQuantidadeErros();
+    public function getErrorsAmount();
 
     /**
      * @return array

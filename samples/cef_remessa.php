@@ -61,6 +61,6 @@ $remessa = new Caixa(
         'beneficiario'  => $beneficiario,
     ]
 );
-$remessa->addBoleto($boleto);
+$remessa->addSlip($boleto);
 
 echo $remessa->save(__DIR__ . DIRECTORY_SEPARATOR . 'arquivos' . DIRECTORY_SEPARATOR . 'cef.txt');
