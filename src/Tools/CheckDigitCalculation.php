@@ -6,7 +6,7 @@ class CheckDigitCalculation
 
     /*
     |--------------------------------------------------------------------------
-    | 001 - Banco do Brasil
+    | 001 - Banks do Brasil
     |--------------------------------------------------------------------------
     */
     public static function bbAgency($agency)
@@ -26,7 +26,7 @@ class CheckDigitCalculation
 
     /*
     |--------------------------------------------------------------------------
-    | 004 - Banco do Nordeste
+    | 004 - Banks do Nordeste
     |--------------------------------------------------------------------------
     */
     public static function bnbAgency($agency)

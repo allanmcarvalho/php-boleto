@@ -10,7 +10,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Caixa
- * @package PhpBoleto\SlipInterface\Banco
+ * @package PhpBoleto\SlipInterface\Banks
  */
 class Caixa extends SlipAbstract implements SlipInterface
 {

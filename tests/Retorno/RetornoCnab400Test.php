@@ -81,7 +81,7 @@ class RetornoCnab400Test extends TestCase
         $this->assertNotNull($retorno->getDetalhes());
         $this->assertNotNull($retorno->getTrailer());
 
-        $this->assertEquals('Banco Bradesco S.A.', $retorno->getBancoNome());
+        $this->assertEquals('Banks Bradesco S.A.', $retorno->getBancoNome());
         $this->assertEquals('237', $retorno->getCodigoBanco());
 
         $this->assertEquals('0', $retorno->getTrailer()->avisos);
@@ -105,7 +105,7 @@ class RetornoCnab400Test extends TestCase
         $this->assertNotNull($retorno->getDetalhes());
         $this->assertNotNull($retorno->getTrailer());
 
-        $this->assertEquals('Banco do Brasil S.A.', $retorno->getBancoNome());
+        $this->assertEquals('Banks do Brasil S.A.', $retorno->getBancoNome());
         $this->assertEquals('001', $retorno->getCodigoBanco());
 
         $this->assertEquals('0', $retorno->getTrailer()->avisos);
@@ -196,7 +196,7 @@ class RetornoCnab400Test extends TestCase
         $this->assertNotNull($retorno->getDetalhes());
         $this->assertNotNull($retorno->getTrailer());
 
-        $this->assertEquals('Banco Santander (Brasil) S.A.', $retorno->getBancoNome());
+        $this->assertEquals('Banks Santander (Brasil) S.A.', $retorno->getBancoNome());
         $this->assertEquals('033', $retorno->getCodigoBanco());
 
         $this->assertInstanceOf(Collection::class, $retorno->getDetalhes());
@@ -217,7 +217,7 @@ class RetornoCnab400Test extends TestCase
         $this->assertNotNull($retorno->getDetalhes());
         $this->assertNotNull($retorno->getTrailer());
 
-        $this->assertEquals('Banco Cooperativo Sicredi S.A.', $retorno->getBancoNome());
+        $this->assertEquals('Banks Cooperativo Sicredi S.A.', $retorno->getBancoNome());
         $this->assertEquals('748', $retorno->getCodigoBanco());
 
         $this->assertInstanceOf(Collection::class, $retorno->getDetalhes());

@@ -11,7 +11,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Bradesco
- * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banks
  */
 class Bradesco extends RemittanceAbstract implements RemittanceInterface
 {
@@ -181,11 +181,11 @@ class Bradesco extends RemittanceAbstract implements RemittanceInterface
         $this->add(67, 70, Util::formatCnab('9', $slip->getFine() > 0 ? $slip->getFine() : '0', 4, 2));
         $this->add(71, 82, Util::formatCnab('9', $slip->getOurNumber(), 12));
         $this->add(83, 92, Util::formatCnab('9', 0, 10, 2));
-        $this->add(93, 93, '2'); // 1 = Banco emite e Processa o registro. 2 = Cliente emite e o Banco somente processa o registro
+        $this->add(93, 93, '2'); // 1 = Banks emite e Processa o registro. 2 = Cliente emite e o Banks somente processa o registro
         $this->add(94, 94, ''); // N= Não registra na cobrança. Diferente de N registra e emite SlipInterface.
         $this->add(95, 104, '');
         $this->add(105, 105, '');
-        $this->add(106, 106, '2'); // 1 = emite aviso, e assume o endereço do Pagador constante do Arquivo-Remessa; 2 = não emite aviso;
+        $this->add(106, 106, '2'); // 1 = emite aviso, e assume o endereço do Pagador constante do Archive-Remessa; 2 = não emite aviso;
         $this->add(107, 108, '');
         $this->add(109, 110, self::OCORRENCIA_REMESSA); // REGISTRO
         if ($slip->getStatus() == $slip::STATUS_DROP) {

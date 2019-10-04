@@ -10,7 +10,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Banrisul
- * @package PhpBoleto\SlipInterface\Banco
+ * @package PhpBoleto\SlipInterface\Banks
  */
 class Banrisul extends SlipAbstract implements SlipInterface
 {

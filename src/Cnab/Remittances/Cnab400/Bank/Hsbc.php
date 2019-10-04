@@ -10,7 +10,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Hsbc
- * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banks
  */
 class Hsbc extends RemittanceAbstract implements RemittanceInterface
 {

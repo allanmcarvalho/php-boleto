@@ -10,7 +10,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Sicredi
- * @package PhpBoleto\SlipInterface\Banco
+ * @package PhpBoleto\SlipInterface\Banks
  */
 class Sicredi extends SlipAbstract implements SlipInterface
 {

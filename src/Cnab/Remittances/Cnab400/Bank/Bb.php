@@ -12,7 +12,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Bb
- * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banks
  */
 class Bb extends RemittanceAbstract implements RemittanceInterface
 {

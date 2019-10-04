@@ -10,7 +10,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Santander
- * @package PhpBoleto\SlipInterface\Banco
+ * @package PhpBoleto\SlipInterface\Banks
  */
 class Santander extends SlipAbstract implements SlipInterface
 {
@@ -130,7 +130,7 @@ class Santander extends SlipAbstract implements SlipInterface
             throw new Exception('Você deve usar dias de protesto ou dias de baixa, nunca os 2');
         }
         if (!in_array($automaticDrop, [15, 30])) {
-            throw new Exception('O Banco Santander so aceita 15 ou 30 dias após o vencimento para baixa automática');
+            throw new Exception('O Banks Santander so aceita 15 ou 30 dias após o vencimento para baixa automática');
         }
         $automaticDrop = (int)$automaticDrop;
         $this->automaticDropAfter = $automaticDrop > 0 ? $automaticDrop : 0;

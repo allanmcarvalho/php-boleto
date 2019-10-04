@@ -11,7 +11,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Banrisul
- * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banks
  */
 class Banrisul extends RemittanceAbstract implements RemittanceInterface
 {

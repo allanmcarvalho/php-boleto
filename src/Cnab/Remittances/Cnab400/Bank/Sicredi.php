@@ -11,7 +11,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Sicredi
- * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banks
  */
 class Sicredi extends RemittanceAbstract implements RemittanceInterface
 {

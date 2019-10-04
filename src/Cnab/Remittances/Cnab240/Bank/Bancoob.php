@@ -11,7 +11,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Bancoob
- * @package PhpBoleto\CnabInterface\Remessa\Cnab240\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab240\Banks
  */
 class Bancoob extends RemittanceAbstract implements RemittanceInterface
 {
@@ -234,18 +234,18 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
     protected function segmentP($nSequentialLot, SlipInterface $slip)
     {
         $this->initiateDetail();
-        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banks
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
         $this->add(9, 13, Util::formatCnab(9, $nSequentialLot, 5)); // Nº sequencial do registro de lote
         $this->add(14, 14, Util::formatCnab('9', 'P', 1)); // Nº sequencial do registro de lote
-        $this->add(15, 15, ''); // Reservado (Uso Banco)
+        $this->add(15, 15, ''); // Reservado (Uso Banks)
         $this->add(16, 17, '01'); // Código de movimento remessa
         $this->add(18, 22, Util::formatCnab(9, $this->getAgency(), 5)); // Agência do cedente
         $this->add(23, 23, Util::formatCnab(9, '', 1)); // Digito verificador da Agência do cedente
         $this->add(24, 35, Util::formatCnab(9, $this->getAccount(), 12)); // Numero da conta corrente
         $this->add(36, 36, Util::formatCnab('9', $this->getAccountCheckDigit(), 1));
-        $this->add(37, 37, ''); // Reservado (Uso Banco)
+        $this->add(37, 37, ''); // Reservado (Uso Banks)
 
         $this->add(38, 47, Util::formatCnab(9, $slip->getOurNumber(), 10));
         $this->add(48, 49, Util::formatCnab(9, $slip->getQuota(), 2));
@@ -257,8 +257,8 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
 
         $this->add(59, 59, '0'); // Forma de Cadastramento
         $this->add(60, 60, ''); // Tipo de documento
-        $this->add(61, 61, '2'); // Reservado (Uso Banco)
-        $this->add(62, 62, '2'); // Reservado (Uso Banco)
+        $this->add(61, 61, '2'); // Reservado (Uso Banks)
+        $this->add(62, 62, '2'); // Reservado (Uso Banks)
         //
         $this->add(63, 77, Util::formatCnab('X', $slip->getDocumentNumber(), 15)); // Seu Número
         $this->add(78, 85, $slip->getDueDate()->format('dmY')); // Data de vencimento do título
@@ -288,7 +288,7 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
         $this->add(225, 227, '');
         $this->add(228, 229, '09'); // Código da moeda
         $this->add(230, 239, '0000000000');
-        $this->add(240, 240, ''); // Reservado (Uso Banco)
+        $this->add(240, 240, ''); // Reservado (Uso Banks)
 
         $this->titleTotalAmount += $slip->getValue();
 
@@ -307,12 +307,12 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
         $this->RegistryLotAmount = $nSequentialLot;
         $this->initiateDetail();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banks
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
         $this->add(9, 13, Util::formatCnab(9, $nSequentialLot, 5)); // Nº sequencial do registro de lote
         $this->add(14, 14, Util::formatCnab('9', 'Q', 1)); // Nº sequencial do registro de lote
-        $this->add(15, 15, ''); // Reservado (Uso Banco)
+        $this->add(15, 15, ''); // Reservado (Uso Banks)
         $this->add(16, 17, '01'); // Código de movimento remessa
         $this->add(18, 18, strlen(Util::onlyNumbers($slip->getPayer()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição do sacado
         $this->add(19, 33, Util::formatCnab(9, Util::onlyNumbers($slip->getPayer()->getDocument()), 15)); // Número de inscrição do sacado
@@ -345,12 +345,12 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
         $this->RegistryLotAmount = $nSequencialLote;
         $this->initiateDetail();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banks
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
         $this->add(9, 13, Util::formatCnab(9, $nSequencialLote, 5)); // Nº sequencial do registro de lote
         $this->add(14, 14, Util::formatCnab('9', 'R', 1)); // Nº sequencial do registro de lote
-        $this->add(15, 15, ''); // Reservado (Uso Banco)
+        $this->add(15, 15, ''); // Reservado (Uso Banks)
         $this->add(16, 17, '01'); // Código de movimento remessa
         $this->add(18, 89, Util::formatCnab(9, 0, 72));
         $this->add(90, 99, '');
@@ -379,12 +379,12 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
         $this->RegistryLotAmount = $nSequentialLot;
         $this->initiateDetail();
 
-        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banco
+        $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do Banks
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '3'); // Numero do lote remessa
         $this->add(9, 13, Util::formatCnab(9, $nSequentialLot, 5)); // Nº sequencial do registro de lote
         $this->add(14, 14, Util::formatCnab('9', 'S', 1)); // Nº sequencial do registro de lote
-        $this->add(15, 15, ''); // Reservado (Uso Banco)
+        $this->add(15, 15, ''); // Reservado (Uso Banks)
         $this->add(16, 17, '01'); // Código de movimento remessa
         $this->add(18, 18, '3');
         $this->add(19, 240, '');
@@ -403,11 +403,11 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
         $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Código do banco
         $this->add(4, 7, '9999'); // Numero do lote remessa
         $this->add(8, 8, '9'); //Tipo de registro
-        $this->add(9, 17, ''); // Reservado (Uso Banco)
+        $this->add(9, 17, ''); // Reservado (Uso Banks)
         $this->add(18, 23, Util::formatCnab(9, 1, 6)); // Qtd de lotes do arquivo
         $this->add(24, 29, Util::formatCnab(9, ($this->RegistryLotAmount + 4), 6)); // Qtd de lotes do arquivo
         $this->add(30, 35, Util::formatCnab(9, 0, 6));
-        $this->add(36, 240, ''); // Reservado (Uso Banco)
+        $this->add(36, 240, ''); // Reservado (Uso Banks)
 
         return $this;
     }
@@ -425,24 +425,24 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
         $this->add(8, 8, '1'); // Tipo de Registro
         $this->add(9, 9, 'R'); // Tipo de operação
         $this->add(10, 11, '01'); // Tipo de serviço
-        $this->add(12, 13, ''); // Reservados (Uso Banco)
+        $this->add(12, 13, ''); // Reservados (Uso Banks)
         $this->add(14, 16, '040'); // Versão do layout
-        $this->add(17, 17, ''); // Reservados (Uso Banco)
+        $this->add(17, 17, ''); // Reservados (Uso Banks)
         $this->add(18, 18, strlen(Util::onlyNumbers($this->getBeneficiary()->getDocument())) == 14 ? '2' : '1'); // Tipo de inscrição da empresa
         $this->add(19, 33, Util::formatCnab('9L', $this->getBeneficiary()->getDocument(), 14)); // Numero de inscrição da empresa
-        $this->add(34, 53, ''); // Reservados (Uso Banco)
+        $this->add(34, 53, ''); // Reservados (Uso Banks)
         $this->add(54, 58, Util::formatCnab(9, $this->getAgency(), 5)); // Agência do cedente
         $this->add(59, 59, Util::formatCnab(9, '', 1)); // Digito verificador da Agência do cedente
         $this->add(60, 71, Util::formatCnab(9, $this->getAccount(), 12)); // Numero da conta corrente
         $this->add(72, 72, Util::formatCnab('9', $this->getAccountCheckDigit(), 1));
-        $this->add(73, 73, ''); // Reservados (Uso Banco)
+        $this->add(73, 73, ''); // Reservados (Uso Banks)
         $this->add(74, 103, Util::formatCnab('X', $this->getBeneficiary()->getName(), 30)); // Nome do cedente
         $this->add(104, 143, ''); // Mensagem 1
         $this->add(144, 183, ''); // Mensagem 2
         $this->add(184, 191, Util::formatCnab(9, $this->getRemittanceId(), 8)); // Número Remessa/retorno
         $this->add(192, 199, date('dmY')); // Data de Gravação do arquivo
         $this->add(200, 207, '00000000');
-        $this->add(208, 240, ''); // Reservado (Uso Banco)
+        $this->add(208, 240, ''); // Reservado (Uso Banks)
 
         return $this;
     }
@@ -457,12 +457,12 @@ class Bancoob extends RemittanceAbstract implements RemittanceInterface
         $this->add(1, 3, Util::onlyNumbers($this->getBankCode())); //Codigo do banco
         $this->add(4, 7, '0001'); // Numero do lote remessa
         $this->add(8, 8, '5'); //Tipo de registro
-        $this->add(9, 17, ''); // Reservado (Uso Banco)
+        $this->add(9, 17, ''); // Reservado (Uso Banks)
         $this->add(18, 23, Util::formatCnab(9, 1, 6)); // Qtd de lotes do arquivo
         $this->add(24, 29, Util::formatCnab(9, ($this->RegistryLotAmount + 4), 6)); // Qtd de lotes do arquivo
         $this->add(30, 46, Util::formatCnab(9, ($this->titleTotalAmount * 100), 17, 2));
         $this->add(47, 115, Util::formatCnab(9, 0, 69)); // Qtd de lotes do arquivo
-        $this->add(116, 240, ''); // Reservado (Uso Banco)
+        $this->add(116, 240, ''); // Reservado (Uso Banks)
 
         return $this;
     }

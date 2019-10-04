@@ -10,7 +10,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Itau
- * @package PhpBoleto\SlipInterface\Banco
+ * @package PhpBoleto\SlipInterface\Banks
  */
 class Itau extends SlipAbstract implements SlipInterface
 {

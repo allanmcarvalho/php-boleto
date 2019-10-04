@@ -23,7 +23,7 @@ class RetornoCnab240Test extends TestCase
         $this->assertNotNull($retorno->getTrailerLote());
         $this->assertNotNull($retorno->getTrailer());
 
-        $this->assertEquals('Banco Santander (Brasil) S.A.', $retorno->getBancoNome());
+        $this->assertEquals('Banks Santander (Brasil) S.A.', $retorno->getBancoNome());
         $this->assertEquals('033', $retorno->getCodigoBanco());
 
         $this->assertInstanceOf(Collection::class, $retorno->getDetalhes());

@@ -192,7 +192,7 @@ class Sicredi extends AbstractRetorno implements RetornoCnabInterface400
         'M2' => 'Não reconhecimento da dívida pelo pagador',
         'X1' => 'Regularização centralizadora – Rede Sicredi',
         'X2' => 'Regularização centralizadora – Compensação',
-        'X3' => 'Regularização centralizadora – Banco correspondente',
+        'X3' => 'Regularização centralizadora – Banks correspondente',
         'X4' => 'Regularização centralizadora - VLB Inferior - via compensação',
         'X5' => 'Regularização centralizadora - VLB Superior - via compensação',
         'X0' => 'Pago com cheque',

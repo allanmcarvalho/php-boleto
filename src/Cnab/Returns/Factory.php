@@ -17,11 +17,11 @@ class Factory
     public static function make($file)
     {
         if (!$file_content = Util::file2array($file)) {
-            throw new Exception("Arquivo: não existe");
+            throw new Exception("Archive: não existe");
         }
 
         if (!Util::isHeaderRetorno($file_content[0])) {
-            throw new Exception("Arquivo: $file, não é um arquivo de retorno");
+            throw new Exception("Archive: $file, não é um arquivo de retorno");
         }
 
         $instancia = self::getBancoClass($file_content);
@@ -47,16 +47,16 @@ class Factory
         }
 
         $aBancos = [
-            BoletoContract::BANK_CODE_BB => 'Banco\\Bb',
-            BoletoContract::BANK_CODE_SANTANDER => 'Banco\\Santander',
-            BoletoContract::BANK_CODE_CEF => 'Banco\\Caixa',
-            BoletoContract::BANK_CODE_BRADESCO => 'Banco\\Bradesco',
-            BoletoContract::BANK_CODE_ITAU => 'Banco\\Itau',
-            BoletoContract::BANK_CODE_HSBC => 'Banco\\Hsbc',
-            BoletoContract::BANK_CODE_SICREDI => 'Banco\\Sicredi',
-            BoletoContract::BANK_CODE_BANRISUL => 'Banco\\Banrisul',
-            BoletoContract::BANK_CODE_BANCOOB => 'Banco\\Bancoob',
-            BoletoContract::BANK_CODE_BNB => 'Banco\\Bnb',
+            BoletoContract::BANK_CODE_BB => 'Banks\\Bb',
+            BoletoContract::BANK_CODE_SANTANDER => 'Banks\\Santander',
+            BoletoContract::BANK_CODE_CEF => 'Banks\\Caixa',
+            BoletoContract::BANK_CODE_BRADESCO => 'Banks\\Bradesco',
+            BoletoContract::BANK_CODE_ITAU => 'Banks\\Itau',
+            BoletoContract::BANK_CODE_HSBC => 'Banks\\Hsbc',
+            BoletoContract::BANK_CODE_SICREDI => 'Banks\\Sicredi',
+            BoletoContract::BANK_CODE_BANRISUL => 'Banks\\Banrisul',
+            BoletoContract::BANK_CODE_BANCOOB => 'Banks\\Bancoob',
+            BoletoContract::BANK_CODE_BNB => 'Banks\\Bnb',
         ];
 
         if (array_key_exists($banco, $aBancos)) {
@@ -64,6 +64,6 @@ class Factory
             return new $bancoClass($file_content);
         }
 
-        throw new Exception("Banco: $banco, inválido");
+        throw new Exception("Banks: $banco, inválido");
     }
 }

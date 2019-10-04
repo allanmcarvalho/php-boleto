@@ -11,7 +11,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Caixa
- * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banco
+ * @package PhpBoleto\CnabInterface\Remessa\Cnab400\Banks
  */
 class Caixa extends RemittanceAbstract implements RemittanceInterface
 {
@@ -162,7 +162,7 @@ class Caixa extends RemittanceAbstract implements RemittanceInterface
         $this->add(4, 17, Util::formatCnab('9L', $this->getBeneficiary()->getDocument(), 14));
         $this->add(18, 21, Util::formatCnab('9', $this->getAgency(), 4));
         $this->add(22, 27, Util::formatCnab('9', $this->getClientCode(), 6));
-        $this->add(28, 28, '2'); // ‘1’ = Banco Emite ‘2’ = Cliente Emite
+        $this->add(28, 28, '2'); // ‘1’ = Banks Emite ‘2’ = Cliente Emite
         $this->add(29, 29, '0'); // ‘0’ = Postagem pelo Beneficiário ‘1’ = Pagador via Correio ‘2’ = Beneficiário via Agência CAIXA ‘3’ = Pagador via e-mail
         $this->add(30, 31, '00');
         $this->add(32, 56, Util::formatCnab('X', $slip->getControlNumber(), 25)); // numero de controle

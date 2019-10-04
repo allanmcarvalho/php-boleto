@@ -9,7 +9,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Hsbc
- * @package PhpBoleto\SlipInterface\Banco
+ * @package PhpBoleto\SlipInterface\Banks
  */
 class Hsbc extends SlipAbstract implements SlipInterface
 {

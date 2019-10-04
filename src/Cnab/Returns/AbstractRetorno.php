@@ -40,7 +40,7 @@ abstract class AbstractRetorno implements Countable, SeekableIterator
     protected $increment = 0;
 
     /**
-     * Arquivo transformado em array por linha.
+     * Archive transformado em array por linha.
      *
      * @var array
      */
@@ -83,7 +83,7 @@ abstract class AbstractRetorno implements Countable, SeekableIterator
         $this->_position = 1;
 
         if (!$this->file = Util::file2array($file)) {
-            throw new Exception("Arquivo: não existe");
+            throw new Exception("Archive: não existe");
         }
 
         $r = new ReflectionClass('\PhpBoleto\Contracts\Boleto\SlipInterface');
@@ -96,12 +96,12 @@ abstract class AbstractRetorno implements Countable, SeekableIterator
         }
 
         if (!Util::isHeaderRetorno($this->file[0])) {
-            throw new Exception(sprintf("Arquivo de retorno inválido"));
+            throw new Exception(sprintf("Archive de retorno inválido"));
         }
 
         $banco = Util::isCnab400($this->file[0]) ? substr($this->file[0], 76, 3) : substr($this->file[0], 0, 3);
         if (!in_array($banco, $bancosDisponiveis)) {
-            throw new Exception(sprintf("Banco: %s, inválido", $banco));
+            throw new Exception(sprintf("Banks: %s, inválido", $banco));
         }
     }
 

@@ -350,7 +350,7 @@ class Pdf extends PdfAbstract implements PdfPdfInterface
         } else {
             $cip = isset($this->slip[$i]->additionalVariables['mostra_cip']) && $this->slip[$i]->additionalVariables['mostra_cip'];
 
-            $this->Cell(($cip ? 23 : 30), $this->cellDescriptionSize, $this->_('Uso do Banco'), 'TLR');
+            $this->Cell(($cip ? 23 : 30), $this->cellDescriptionSize, $this->_('Uso do Banks'), 'TLR');
             if ($cip) {
                 $this->Cell(7, $this->cellDescriptionSize, $this->_('CIP'), 'TLR');
             }

@@ -10,7 +10,7 @@ use PhpBoleto\Tools\Util;
 
 /**
  * Class Bradesco
- * @package PhpBoleto\SlipInterface\Banco
+ * @package PhpBoleto\SlipInterface\Banks
  */
 class Bradesco extends SlipAbstract implements SlipInterface
 {
@@ -31,7 +31,7 @@ class Bradesco extends SlipAbstract implements SlipInterface
 
     /**
      * Trata-se de código utilizado para identificar mensagens especificas ao cedente, sendo
-     * que o mesmo consta no cadastro do Banco, quando não houver código cadastrado preencher
+     * que o mesmo consta no cadastro do Banks, quando não houver código cadastrado preencher
      * com zeros "000".
      *
      * @var int
