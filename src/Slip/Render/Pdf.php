@@ -3,13 +3,13 @@
 namespace PhpBoleto\Slip\Render;
 
 use Exception;
-use PhpBoleto\Interfaces\Slip\Render\PdfPdfInterface;
+use PhpBoleto\Interfaces\Slip\Render\PdfInterface;
 use PhpBoleto\Interfaces\Slip\SlipInterface;
 use PhpBoleto\Tools\Util;
 use Psr\Http\Message\StreamInterface;
 use function GuzzleHttp\Psr7\stream_for;
 
-class Pdf extends PdfAbstract implements PdfPdfInterface
+class Pdf extends PdfAbstract implements PdfInterface
 {
     const OUTPUT_STANDARD = 'I';
     const OUTPUT_DOWNLOAD = 'D';
